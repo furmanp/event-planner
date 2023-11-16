@@ -1,8 +1,9 @@
-import { sign } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
 import { User } from '../models/models.js';
 
 export const createJWT = (user: User) => {
+  const {sign} = jwt
   return sign({ id: user.id, username: user.username }, process.env.JWT_SECRET);
 };
 
