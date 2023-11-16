@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id       Int        @id @default(autoincrement())
+  username String     @unique
+  password String
+  projects projects[]
+}
+
+model clients {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique @db.VarChar
+  projects projects[]
+}
+
+model projects {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique @db.VarChar
+  client_id         Int
+  date              DateTime            @db.Date
+  project_owner_id  Int
+  project_equipment project_equipment[]
+  client            clients             @relation(fields: [client_id], references: [id])
+  project_owner     users               @relation(fields: [project_owner_id], references: [id])
+}
+
+model project_equipment {
+  id         Int       @unique
+  project_id Int
+  item_id    Int
+  equipment  inventory @relation(fields: [item_id], references: [id])
+  project    projects  @relation(fields: [project_id], references: [id])
+}
+
+model inventory {
+  id        Int                 @id @default(autoincrement())
+  name      String              @unique @db.VarChar(50)
+  stock     Int
+  equipment project_equipment[]
+}
+
+model employees {
+  id         Int    @id @default(autoincrement())
+  first_name String @db.VarChar(50)
+  last_name  String @db.VarChar(50)
+
+  @@unique([first_name, last_name])
+}
