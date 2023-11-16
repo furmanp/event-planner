@@ -9,7 +9,7 @@ import {
   User,
 } from '../models/models.js';
 import { createJWT, hashPassword } from '../modules/auth.js';
-
+//
 const prisma: PrismaClient = new PrismaClient();
 
 export async function getEmployees(
