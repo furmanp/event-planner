@@ -13,7 +13,7 @@ export function protect(
   const bearer: string = req.headers.authorization;
 
   if (!bearer) {
-    res.status(401).json({ message: 'Not authorized' });
+    res.status(401).json({ success: false, message: 'Not authorized' });
     return;
   }
   const [, token] = bearer.split(' ');

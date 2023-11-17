@@ -8,7 +8,7 @@ import {
     getEmployees,
     updateEmployeeById,
     updateEmployees
-} from "../services/database.js";
+} from "../services/employees.database.js";
 import {Prisma} from "@prisma/client";
 
 export async function getEmployeesHandler(req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response): Promise<void> {
@@ -84,7 +84,6 @@ export async function getEmployeeByIdHandler(req: Request, res: Response): Promi
         res.status(500).json({success: false, error: error.message})
     }
 }
-
 
 export async function updateEmployeeByIdHandler(req: Request, res: Response): Promise<void> {
     const employeeData: Employee = {

@@ -1,4 +1,4 @@
-import winston from 'winston';
+import * as winston from 'winston';
 
 const levels: winston.config.AbstractConfigSetLevels = {
     error: 0,
