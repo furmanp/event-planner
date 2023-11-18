@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { config } from "../../config.js";
+
 export interface IGetUserAuthInfoRequest extends Request {
   user: string; // or any other type
 }
@@ -10,7 +12,7 @@ export function protect(
   next: NextFunction,
 ): void {
   const {verify} = jwt
-  const bearer: string = req.headers.authorization;
+  const bearer: string | undefined = req.headers.authorization;
 
   if (!bearer) {
     res.status(401).json({ success: false, message: 'Not authorized' });
@@ -23,8 +25,8 @@ export function protect(
     return;
   }
   try {
-    req.user = <string>verify(token, process.env.JWT_SECRET);
-    next();
+      req.user = <string>verify(token, config.JWT_TOKEN);
+      next();
   } catch (error) {
     res.status(401).json({ message: 'Wrong password.' });
   }

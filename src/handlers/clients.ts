@@ -1,15 +1,14 @@
 import {Request, Response} from "express";
 import {Client} from "../models/models.js";
+import {Prisma} from "@prisma/client";
 import {
     createClients,
     deleteClientById,
     deleteClients,
-    getClientById,
-    getClients,
+    getClientById, getClients,
     updateClientById,
     updateClients
-} from "../services/database.js";
-import {Prisma} from "@prisma/client";
+} from "../services/clients.database.js";
 
 export async function getClientsHandler(_req: Request, res: Response): Promise<void> {
 

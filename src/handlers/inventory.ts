@@ -1,15 +1,12 @@
 import {Request, Response} from "express";
 import {Inventory, RequestBody, RequestParams, RequestQuery, ResponseBody} from "../models/models.js";
-import {
-    createInventory,
-    deleteInventory,
-    deleteInventoryById,
-    getInventory,
-    getInventoryById,
-    updateInventory,
-    updateInventoryById
-} from "../services/database.js";
 import {Prisma} from "@prisma/client";
+import {
+  createInventory, deleteInventory,
+  deleteInventoryById, getInventory,
+  getInventoryById, updateInventory,
+  updateInventoryById
+} from "../services/inventory.database.js";
 
 //TODO add filtering and sorting the data
 export async function getInventoryHandler(req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response): Promise<void> {
@@ -71,7 +68,7 @@ export async function createInventoryHandler(req: Request, res: Response): Promi
 export async function getInventoryByIdHandler(req: Request, res: Response): Promise<void> {
     try {
         const id: number = parseInt(req.params.id)
-        const inventory: Inventory = await getInventoryById(id)
+        const inventory: Inventory | null = await getInventoryById(id)
         res.status(200).json({success: true, data: inventory})
     } catch (error) {
         console.error('Error fetching inventory: ', error)

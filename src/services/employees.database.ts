@@ -1,6 +1,6 @@
 import { Employee } from "../models/models.js";
 import { Prisma } from "@prisma/client";
-import { handlePrismaError, prisma } from "./database.js";
+import prisma, { handlePrismaError} from "./../../libs/prisma.js";
 
 export async function getEmployees(
   page: number,
@@ -75,7 +75,7 @@ export async function deleteEmployees(): Promise<Prisma.BatchPayload> {
 
 export async function getEmployeeById(id: number): Promise<Employee | null> {
   try {
-    const employee: Employee = await prisma.employees.findUnique({
+    const employee: Employee | null = await prisma.employees.findUnique({
       where: { id: id },
     });
     return employee ? employee : null;
