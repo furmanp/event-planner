@@ -1,6 +1,6 @@
 import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
-import prisma, { handlePrismaError } from '../../libs/prisma.js';
+import prisma, { handlePrismaError } from '../libs/prisma.js';
 
 export function getClients(): Promise<Client[]>;
 export function getClients(id: number): Promise<Client | null>;

@@ -1,8 +1,12 @@
 import { User } from "../models/models.js";
-import prisma, { handlePrismaError } from "../../libs/prisma.js";
+import prisma, { handlePrismaError } from "../libs/prisma.js";
 import { hashPassword } from "../modules/auth.js";
+import { Prisma } from "@prisma/client";
 
 export async function createUser(user: User): Promise<User> {
+  if(!user.username || !user.password) {
+    throw new Error("Username and password are required.")
+  }
   try {
     return await prisma.users.create({
       data: {
@@ -11,8 +15,14 @@ export async function createUser(user: User): Promise<User> {
       },
     });
   } catch (error) {
-    console.log();
-    throw handlePrismaError(error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      throw new Error('Username is already in use.');
+    } else {
+      throw handlePrismaError(error);
+    }
   }
 }
 

@@ -6,7 +6,7 @@ import {
   deleteInventoryById, getInventory,
   getInventoryById, updateInventory,
   updateInventoryById
-} from "../services/inventory.database.js";
+} from "../services/inventory.service.js";
 
 //TODO add filtering and sorting the data
 export async function getInventoryHandler(req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response): Promise<void> {

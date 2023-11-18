@@ -1,7 +1,7 @@
 {
-  "name": "node-typescript-boilerplate",
+  "name": "event-planner",
   "version": "0.0.0",
-  "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
+  "description": "",
   "type": "module",
   "engines": {
     "node": ">= 18.12 <19"
@@ -13,6 +13,7 @@
     "@typescript-eslint/eslint-plugin": "~6.2",
     "@typescript-eslint/parser": "~6.2",
     "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/ui": "^0.34.6",
     "eslint": "~8.46",
     "eslint-config-prettier": "~9.0",
     "eslint-plugin-jest": "~27.2",
@@ -36,7 +37,9 @@
     "lint": "eslint . --ext .ts --ext .mts",
     "test": "vitest --coverage",
     "prettier": "prettier --config .prettierrc --write .",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "test:unit": "vitest -c ./vitest.config.unit.ts",
+    "test:unit:ui": "vitest -c ./vitest.config.unit.ts --ui"
   },
   "license": "Apache-2.0",
   "dependencies": {

@@ -8,7 +8,7 @@ import {
     getProjects,
     updateProjectById,
     updateProjects
-} from "../services/projects.database.js";
+} from "../services/projects.service.js";
 import {Prisma} from "@prisma/client";
 
 export async function getProjectsHandler(req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response): Promise<void> {

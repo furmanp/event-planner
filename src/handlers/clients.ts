@@ -8,7 +8,7 @@ import {
     getClientById, getClients,
     updateClientById,
     updateClients
-} from "../services/clients.database.js";
+} from "../services/clients.service.js";
 
 export async function getClientsHandler(_req: Request, res: Response): Promise<void> {
 

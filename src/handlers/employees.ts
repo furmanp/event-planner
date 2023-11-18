@@ -8,7 +8,7 @@ import {
     getEmployees,
     updateEmployeeById,
     updateEmployees
-} from "../services/employees.database.js";
+} from "../services/employees.service.js";
 import {Prisma} from "@prisma/client";
 
 export async function getEmployeesHandler(req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response): Promise<void> {

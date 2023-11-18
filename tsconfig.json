@@ -21,6 +21,8 @@
     "strictNullChecks": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "__tests__/**/*", "libs/*"],
+  "include": ["src/**/*", "__tests__/*",
+    "src/libs/*"
+  ],
   "exclude": ["node_modules"]
 }

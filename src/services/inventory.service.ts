@@ -1,6 +1,6 @@
 //TODO implement filtering functionality
 import { Inventory } from "../models/models.js";
-import prisma, { handlePrismaError } from "../../libs/prisma.js";
+import prisma, { handlePrismaError } from "../libs/prisma.js";
 import { Prisma } from "@prisma/client";
 
 export async function getInventory(

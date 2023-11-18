@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma, { handlePrismaError } from "../../libs/prisma.js";
+import prisma, { handlePrismaError } from "../libs/prisma.js";
 import { Project, ProjectList } from "../models/models.js";
 
 // export const prisma: PrismaClient = new PrismaClient();

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/models.js';
-import { createUser, getUserById } from '../services/users.database.js';
+import { createUser, getUserById } from '../services/users.service.js';
 import { comparePasswords, createJWT } from '../modules/auth.js';
 
 export async function createUsersHandler(
@@ -18,7 +18,7 @@ export async function createUsersHandler(
       .status(201)
       .json({ success: true, token: token, message: 'User created.' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error });
+    res.status(500).json({ success: false, error: error.message });
   }
 }
 
