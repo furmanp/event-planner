@@ -10,8 +10,9 @@ full-stack application in the future.
 - Technology stack: Express.js & TypeScript, potentially new technologies will follow if found feasible to include.
 - Use Case: Event Planning & Event equipment rental. Trying to solve a real-life problem of event styling company.
 
-Learning resources
+Resources that help me build this project:
 
 - [Google Cloud APIs standard](https://cloud.google.com/apis/docs/overview)
 - [Atlassian REST API Design guidelines](https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-rest-api-design-guidelines-version-1/#AtlassianRESTAPIDesignGuidelinesversion1-RESTResources)
 - [Microsoft's RESTful web API design](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)
+- [The ultimate Guide to testing with Prisma](https://www.prisma.io/blog/testing-series-1-8eRB5p0Y8o)
