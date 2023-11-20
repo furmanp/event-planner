@@ -1,11 +1,11 @@
-import { User } from "../models/models.js";
-import prisma, { handlePrismaError } from "../libs/prisma.js";
-import { hashPassword } from "../modules/auth.js";
-import { Prisma } from "@prisma/client";
+import { User } from '../models/models.js';
+import prisma, { handlePrismaError } from '../libs/prisma.js';
+import { hashPassword } from '../modules/auth.js';
+import { Prisma } from '@prisma/client';
 
 export async function createUser(user: User): Promise<User> {
-  if(!user.username || !user.password) {
-    throw new Error("Username and password are required.")
+  if (!user.username || !user.password) {
+    throw new Error('Username and password are required.');
   }
   try {
     return await prisma.users.create({
