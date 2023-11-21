@@ -33,7 +33,6 @@ export async function getUserById(username: string): Promise<User | null> {
     });
     return user ? user : null;
   } catch (error) {
-    console.log();
     throw handlePrismaError(error);
   }
 }
