@@ -1,10 +1,10 @@
-import { Employee } from "../models/models.js";
-import { Prisma } from "@prisma/client";
-import prisma, { handlePrismaError} from "../libs/prisma.js";
+import { Employee } from '../models/models.js';
+import { Prisma } from '@prisma/client';
+import prisma, { handlePrismaError } from '../libs/prisma.js';
 
 export async function getEmployees(
-  page: number,
-  pageSize: number,
+  page: number = 1,
+  pageSize: number = 20,
   sortBy: string = 'id',
 ): Promise<{
   data: Employee[];

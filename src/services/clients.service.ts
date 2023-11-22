@@ -2,22 +2,9 @@ import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 
-export function getClients(): Promise<Client[]>;
-export function getClients(id: number): Promise<Client | null>;
-export async function getClients(
-  id?: number | null,
-): Promise<Client[] | Client | null> {
+export async function getClients(): Promise<Client[]> {
   try {
-    if (!id) {
-      return await prisma.clients.findMany();
-    } else {
-      const client: Client | null = await prisma.clients.findUnique({
-        where: {
-          id: id,
-        },
-      });
-      return client ? client : null;
-    }
+    return await prisma.clients.findMany();
   } catch (error) {
     console.log();
     throw error;
@@ -27,6 +14,10 @@ export async function getClients(
 export async function createClients(
   client: Client | Client[],
 ): Promise<Promise<Client> | Promise<Prisma.BatchPayload>> {
+  // if (!client.name) {
+  //   // TODO
+  //   throw new Error('Name field cannot be empty.');
+  // }
   try {
     if (!Array.isArray(client)) {
       return await prisma.clients.create({
@@ -67,7 +58,7 @@ export async function deleteClients(): Promise<Prisma.BatchPayload> {
 
 export async function getClientById(id: number): Promise<Client | null> {
   try {
-    const client: Client | null= await prisma.clients.findUnique({
+    const client: Client | null = await prisma.clients.findUnique({
       where: {
         id: id,
       },

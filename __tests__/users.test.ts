@@ -46,6 +46,7 @@ describe('users.service', () => {
       });
     });
   });
+
   describe('getUserById', () => {
     describe('given user with provided username exitsts', () => {
       test('Should return User object', async (): Promise<void> => {
