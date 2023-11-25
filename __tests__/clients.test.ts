@@ -32,7 +32,7 @@ describe('clients.service', () => {
         });
       });
       describe('given clients name is an empty string', () => {
-        test('should return user object', async (): Promise<void> => {
+        test('should throw an error', async (): Promise<void> => {
           const newClient: Client = {
             name: '',
           };

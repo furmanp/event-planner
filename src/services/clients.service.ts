@@ -14,16 +14,20 @@ export async function getClients(): Promise<Client[]> {
 export async function createClients(
   client: Client | Client[],
 ): Promise<Promise<Client> | Promise<Prisma.BatchPayload>> {
-  // if (!client.name) {
-  //   // TODO
-  //   throw new Error('Name field cannot be empty.');
-  // }
   try {
     if (!Array.isArray(client)) {
+      if (!client.name) {
+        throw new Error('Client name is required.');
+      }
       return await prisma.clients.create({
         data: client,
       });
     } else {
+      for (const individualClient of client) {
+        if (!individualClient.name) {
+          throw new Error('Client name is required.');
+        }
+      }
       return await prisma.clients.createMany({
         data: client,
       });

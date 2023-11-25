@@ -32,9 +32,11 @@ model projects {
 }
 
 model project_equipment {
-  id         Int       @unique
+  id         Int       @unique @default(autoincrement())
   project_id Int
   item_id    Int
+  check_in   DateTime  @db.Date
+  check_out  DateTime  @db.Date
   equipment  inventory @relation(fields: [item_id], references: [id])
   project    projects  @relation(fields: [project_id], references: [id])
 }
