@@ -7,7 +7,7 @@ import {
   getProjectByIdHandler,
   updateProjectByIdHandler,
   deleteProjectByIdHandler,
-} from '../handlers/projects.js';
+} from '../controllers/projects.js';
 
 const router: Router = express.Router();
 

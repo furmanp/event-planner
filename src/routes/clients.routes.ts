@@ -6,7 +6,7 @@ import {
   getClientByIdHandler,
   updateClientByIdHandler,
   deleteClientByIdHandler,
-} from '../handlers/clients.js';
+} from '../controllers/clients.js';
 import express, { Router } from 'express';
 
 const router: Router = express.Router();

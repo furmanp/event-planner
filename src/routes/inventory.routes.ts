@@ -6,7 +6,7 @@ import {
   getInventoryByIdHandler,
   updatesInventoryByIdHandler,
   deleteInventoryByIdHandler,
-} from '../handlers/inventory.js';
+} from '../controllers/inventory.js';
 import express, { Router } from 'express';
 
 const router: Router = express.Router();

@@ -6,7 +6,7 @@ import {
   getEmployeeByIdHandler,
   updateEmployeeByIdHandler,
   deleteEmployeeByIdHandler,
-} from '../handlers/employees.js';
+} from '../controllers/employees.js';
 import express, { Router } from 'express';
 
 const router: Router = express.Router();

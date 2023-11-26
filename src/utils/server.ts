@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import { router } from './../routes.js';
-import { createUsersHandler, singIn } from './../handlers/users.js';
+import { createUsersHandler, singIn } from '../controllers/users.js';
 import { morganMiddleware } from './../middleware/morgan-middleware.js';
 
 export function createServer(): Express {

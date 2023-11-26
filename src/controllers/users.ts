@@ -8,11 +8,11 @@ export async function createUsersHandler(
   res: Response,
 ): Promise<void> {
   const userData: User = req.body;
-  let token: string = ""
+  let token: string = '';
   try {
-    const user: User= await createUser(userData);
-    if(user) {
-      token = createJWT(user)
+    const user: User = await createUser(userData);
+    if (user) {
+      token = createJWT(user);
     }
     res
       .status(201)
@@ -25,9 +25,9 @@ export async function createUsersHandler(
 export async function singIn(req: Request, res: Response): Promise<void> {
   try {
     const user: User | null = await getUserById(req.body.username);
-    if(!user) {
-     res.status(404).json({ success: false, message: 'User not found.'})
-      return
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found.' });
+      return;
     }
     const isValid: boolean = await comparePasswords(
       req.body.password,

@@ -119,3 +119,17 @@ export async function deleteEquipmentById(id: number): Promise<Equipment> {
     throw error;
   }
 }
+
+export async function getEquipmentByProjectId(
+  project_id: number,
+): Promise<Equipment[]> {
+  try {
+    const equipment: Equipment[] = await prisma.project_equipment.findMany({
+      where: { project_id: project_id },
+    });
+    return equipment;
+  } catch (error) {
+    console.log();
+    throw handlePrismaError(error);
+  }
+}
