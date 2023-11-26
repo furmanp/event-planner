@@ -91,7 +91,7 @@ export async function getEquipmentById(id: number): Promise<Equipment | null> {
   }
 }
 
-export async function updateInventoryById(
+export async function updateEquipmentById(
   equipment: Equipment,
 ): Promise<Equipment> {
   try {
