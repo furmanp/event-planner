@@ -1,25 +1,18 @@
 import express, { Router } from 'express';
-import {
-  getEquipmentHandler,
-  createEquipmentHandler,
-  updateEquipmentHandler,
-  deleteEquipmentHandler,
-  getEquipmentByIdHandler,
-  updateEquipmentByIdHandler,
-  deleteEquipmentByIdHandler,
-} from '../controllers/equipment.handler.js';
-
+import { EquipmentController } from '../controllers/equipment.controller.js';
 export const router: Router = express.Router();
 
-router.get('/equipment', getEquipmentHandler);
-router.post('/equipment', createEquipmentHandler);
-router.put('/equipment', updateEquipmentHandler);
-router.delete('/equipment', deleteEquipmentHandler);
+const equipmentController = new EquipmentController();
 
-router.get('/equipment/:id', getEquipmentByIdHandler);
+router.get('/equipment', equipmentController.getEquipment);
+router.post('/equipment', equipmentController.createEquipment);
+router.put('/equipment', equipmentController.updateEquipment);
+router.delete('/equipment', equipmentController.deleteEquipment);
+
+router.get('/equipment/:id', equipmentController.getEquipmentById);
 router.post('/equipment/:id'); // error
-router.put('/equipment/:id', updateEquipmentByIdHandler);
-router.delete('/equipment/:id', deleteEquipmentByIdHandler);
+router.put('/equipment/:id', equipmentController.updateEquipmentById);
+router.delete('/equipment/:id', equipmentController.deleteEquipmentById);
 
 router.get('/equipemnt/:date'); //getEquipmentByDate
 router.get('/equipemnt/:project_id'); //getEquipmentByProjectId
