@@ -1,23 +1,17 @@
 import express, { Router } from 'express';
-import {
-  getProjectsHandler,
-  createProjectsHandler,
-  updateProjectsHandler,
-  deleteProjectsHandler,
-  getProjectByIdHandler,
-  updateProjectByIdHandler,
-  deleteProjectByIdHandler,
-} from '../controllers/projects.js';
+import { ProjectController } from '../controllers/projects.controller.js';
 
 const router: Router = express.Router();
+const projectController: ProjectController = new ProjectController();
 
-router.get('/projects', getProjectsHandler);
-router.post('/projects', createProjectsHandler);
-router.put('/projects', updateProjectsHandler);
-router.delete('/projects', deleteProjectsHandler);
-router.get('/projects/:id', getProjectByIdHandler);
+router.get('/projects', projectController.getProjects);
+router.post('/projects', projectController.createProjects);
+router.put('/projects', projectController.updateProjects);
+router.delete('/projects', projectController.deleteProjects);
+
+router.get('/projects/:id', projectController.getProjectById);
 router.post('/project/:id'); // error
-router.put('/project/:id', updateProjectByIdHandler);
-router.delete('/project/:id', deleteProjectByIdHandler);
+router.put('/project/:id', projectController.updateProjectById);
+router.delete('/project/:id', projectController.deleteProjectById);
 
 export default router;

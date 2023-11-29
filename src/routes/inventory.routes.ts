@@ -1,23 +1,16 @@
-import {
-  getInventoryHandler,
-  createInventoryHandler,
-  updateInventoryHandler,
-  deleteInventoryHandler,
-  getInventoryByIdHandler,
-  updatesInventoryByIdHandler,
-  deleteInventoryByIdHandler,
-} from '../controllers/inventory.js';
+import { InventoryController } from '../controllers/inventory.controller.js';
 import express, { Router } from 'express';
 
 const router: Router = express.Router();
+const inventoryController: InventoryController = new InventoryController();
 
-router.get('/inventory', getInventoryHandler);
-router.post('/inventory', createInventoryHandler);
-router.put('/inventory', updateInventoryHandler);
-router.delete('/inventory', deleteInventoryHandler);
-router.get('/inventory/:id', getInventoryByIdHandler);
+router.get('/inventory', inventoryController.getInventory);
+router.post('/inventory', inventoryController.createInventory);
+router.put('/inventory', inventoryController.updateInventory);
+router.delete('/inventory', inventoryController.deleteInventory);
+router.get('/inventory/:id', inventoryController.getInventoryById);
 router.post('/inventory/:id'); // error
-router.put('/inventory/:id', updatesInventoryByIdHandler);
-router.delete('/inventory/:id', deleteInventoryByIdHandler);
+router.put('/inventory/:id', inventoryController.updatesInventoryById);
+router.delete('/inventory/:id', inventoryController.deleteInventoryById);
 
 export default router;
