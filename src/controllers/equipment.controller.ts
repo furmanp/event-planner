@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {
+  Project as IProject,
   RequestBody,
   RequestParams,
   RequestQuery,
@@ -16,6 +17,8 @@ import {
   updateEquipmentById,
 } from '../services/equipment.service.js';
 import { Equipment as IEquipment } from '../models/models.js';
+import { Equipment } from '../models/equipment.model.js';
+import { getProjectById } from '../services/projects.service.js';
 
 export class EquipmentController {
   async getEquipment(
@@ -51,6 +54,21 @@ export class EquipmentController {
   }
   async createEquipment(req: Request, res: Response): Promise<void> {
     const equipmentData: IEquipment | IEquipment[] = req.body;
+    if (!Array.isArray(equipmentData)) {
+      const booking: Equipment = new Equipment(equipmentData);
+      const project: IProject | null = await getProjectById(booking.project_id);
+      if (!booking.isAvailable(project!.date)) {
+        res
+          .status(400)
+          .json({ success: false, message: 'Wrong booking date.' });
+        return;
+      }
+    } else {
+      const bookings: Equipment[] = [];
+      equipmentData.forEach((item) => {
+        bookings.push(new Equipment(item));
+      });
+    }
     try {
       const result: IEquipment | Prisma.BatchPayload = await createEquipment(
         equipmentData,
