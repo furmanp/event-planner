@@ -3,7 +3,7 @@ import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { Prisma } from '@prisma/client';
 import { getProjectById } from './projects.service.js';
 import { Equipment } from '../models/equipment.model.js';
-import { DateError } from '../models/errors.js';
+import { DateError, OverbookingError } from '../models/errors.js';
 
 export async function getEquipment(
   page: number,
@@ -64,38 +64,58 @@ export async function deleteEquipment(): Promise<Prisma.BatchPayload> {
 
 export async function createEquipment(
   equipment: IEquipment | IEquipment[],
-): Promise<Promise<IEquipment> | Promise<Prisma.BatchPayload>> {
+): Promise<IEquipment | Prisma.BatchPayload> {
+  // TODO check stock
   try {
     if (!Array.isArray(equipment)) {
-      const parsedDate: { check_in: Date; check_out: Date } = {
-        check_in: new Date(equipment.check_in),
-        check_out: new Date(equipment.check_out),
-      };
+      const availability = await getEquipmentByDate(
+        new Date(equipment.check_in),
+      );
+      console.log(availability);
+
       const project = await getProjectById(equipment.project_id);
       const newEquipment = new Equipment(equipment);
-      if (newEquipment.isAvailable(project!.date)) {
+      if (await newEquipment.isAvailable(project!.date)) {
         return await prisma.project_equipment.create({
           data: {
-            project_id: equipment.project_id,
-            item_id: equipment.item_id,
-            check_in: parsedDate.check_in,
-            check_out: parsedDate.check_out,
+            project_id: newEquipment.project_id,
+            item_id: newEquipment.item_id,
+            check_in: newEquipment.check_in,
+            check_out: newEquipment.check_out,
           },
         });
       } else {
-        throw new DateError({
+        throw new OverbookingError({
           name: 'Equipment Booking Error',
-          message: 'Check booking dates with project date.',
+          message: 'No items available for provided date.',
         });
       }
     } else {
-      // TODO
+      const parsedEquipment: IEquipment[] = [];
+      for (const booking of equipment) {
+        const project = await getProjectById(booking.project_id);
+        const newEquipment = new Equipment(booking);
+        if (!newEquipment.isAvailable(project!.date)) {
+          throw new DateError({
+            name: 'Equipment Booking Error',
+            message: 'Check booking dates with project date.',
+          });
+        } else {
+          parsedEquipment.push({
+            project_id: booking.project_id,
+            item_id: booking.item_id,
+            check_in: booking.check_in,
+            check_out: booking.check_out,
+          });
+        }
+      }
+
       return await prisma.project_equipment.createMany({
-        data: equipment,
+        data: parsedEquipment,
       });
     }
   } catch (error) {
-    if (error instanceof DateError) {
+    if (error instanceof OverbookingError) {
       throw error;
     } else {
       throw handlePrismaError(error);
@@ -151,6 +171,24 @@ export async function getEquipmentByProjectId(
   try {
     const equipment: IEquipment[] = await prisma.project_equipment.findMany({
       where: { project_id: project_id },
+    });
+    return equipment;
+  } catch (error) {
+    console.log();
+    throw handlePrismaError(error);
+  }
+}
+export async function getEquipmentByDate(date: Date): Promise<IEquipment[]> {
+  try {
+    const equipment: IEquipment[] = await prisma.project_equipment.findMany({
+      where: {
+        check_in: {
+          lte: date,
+        },
+        check_out: {
+          gte: date,
+        },
+      },
     });
     return equipment;
   } catch (error) {
