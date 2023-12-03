@@ -1,13 +1,16 @@
-import { Equipment } from '../models/models.js';
+import { Equipment as IEquipment } from '../models/models.js';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { Prisma } from '@prisma/client';
+import { getProjectById } from './projects.service.js';
+import { Equipment } from '../models/equipment.model.js';
+import { DateError } from '../models/errors.js';
 
 export async function getEquipment(
   page: number,
   pageSize: number,
   sortBy?: string,
 ): Promise<{
-  data: Equipment[];
+  data: IEquipment[];
   totalItems: number;
 }> {
   try {
@@ -19,7 +22,7 @@ export async function getEquipment(
       orderBy[sortBy] = 'asc';
     }
 
-    const data: Equipment[] = await prisma.project_equipment.findMany({
+    const data: IEquipment[] = await prisma.project_equipment.findMany({
       skip,
       take: pageSize,
       orderBy,
@@ -38,7 +41,7 @@ export async function getEquipment(
 }
 
 export async function updateEquipment(
-  equipment: Equipment[],
+  equipment: IEquipment[],
 ): Promise<Prisma.BatchPayload> {
   try {
     return await prisma.project_equipment.updateMany({
@@ -60,27 +63,49 @@ export async function deleteEquipment(): Promise<Prisma.BatchPayload> {
 }
 
 export async function createEquipment(
-  equipment: Equipment | Equipment[],
-): Promise<Promise<Equipment> | Promise<Prisma.BatchPayload>> {
+  equipment: IEquipment | IEquipment[],
+): Promise<Promise<IEquipment> | Promise<Prisma.BatchPayload>> {
   try {
     if (!Array.isArray(equipment)) {
-      return await prisma.project_equipment.create({
-        data: equipment,
-      });
+      const parsedDate: { check_in: Date; check_out: Date } = {
+        check_in: new Date(equipment.check_in),
+        check_out: new Date(equipment.check_out),
+      };
+      const project = await getProjectById(equipment.project_id);
+      const newEquipment = new Equipment(equipment);
+      if (newEquipment.isAvailable(project!.date)) {
+        return await prisma.project_equipment.create({
+          data: {
+            project_id: equipment.project_id,
+            item_id: equipment.item_id,
+            check_in: parsedDate.check_in,
+            check_out: parsedDate.check_out,
+          },
+        });
+      } else {
+        throw new DateError({
+          name: 'Equipment Booking Error',
+          message: 'Check booking dates with project date.',
+        });
+      }
     } else {
+      // TODO
       return await prisma.project_equipment.createMany({
         data: equipment,
       });
     }
   } catch (error) {
-    console.log();
-    throw handlePrismaError(error);
+    if (error instanceof DateError) {
+      throw error;
+    } else {
+      throw handlePrismaError(error);
+    }
   }
 }
 
-export async function getEquipmentById(id: number): Promise<Equipment | null> {
+export async function getEquipmentById(id: number): Promise<IEquipment | null> {
   try {
-    const equipment: Equipment | null =
+    const equipment: IEquipment | null =
       await prisma.project_equipment.findUnique({
         where: { id: id },
       });
@@ -92,8 +117,8 @@ export async function getEquipmentById(id: number): Promise<Equipment | null> {
 }
 
 export async function updateEquipmentById(
-  equipment: Equipment,
-): Promise<Equipment> {
+  equipment: IEquipment,
+): Promise<IEquipment> {
   try {
     return await prisma.project_equipment.update({
       where: { id: equipment.id },
@@ -109,7 +134,7 @@ export async function updateEquipmentById(
   }
 }
 
-export async function deleteEquipmentById(id: number): Promise<Equipment> {
+export async function deleteEquipmentById(id: number): Promise<IEquipment> {
   try {
     return await prisma.project_equipment.delete({
       where: { id: id },
@@ -122,9 +147,9 @@ export async function deleteEquipmentById(id: number): Promise<Equipment> {
 
 export async function getEquipmentByProjectId(
   project_id: number,
-): Promise<Equipment[]> {
+): Promise<IEquipment[]> {
   try {
-    const equipment: Equipment[] = await prisma.project_equipment.findMany({
+    const equipment: IEquipment[] = await prisma.project_equipment.findMany({
       where: { project_id: project_id },
     });
     return equipment;

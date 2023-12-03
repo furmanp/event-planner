@@ -1,9 +1,8 @@
-import { Prisma } from "@prisma/client";
-import prisma, { handlePrismaError } from "../libs/prisma.js";
-import { Project, ProjectList } from "../models/models.js";
+import { Prisma } from '@prisma/client';
+import prisma, { handlePrismaError } from '../libs/prisma.js';
+import { Project, ProjectList } from '../models/models.js';
 
 // export const prisma: PrismaClient = new PrismaClient();
-
 
 export async function getProjects(
   page: number,
@@ -50,12 +49,28 @@ export async function createProject(
 ): Promise<Promise<Project> | Promise<Prisma.BatchPayload>> {
   try {
     if (!Array.isArray(project)) {
+      const projectDate = new Date(project.date);
       return await prisma.projects.create({
-        data: project,
+        data: {
+          name: project.name,
+          client_id: project.client_id,
+          date: projectDate,
+          project_owner_id: project.project_owner_id,
+        },
       });
     } else {
+      const parsedInput: Project[] = [];
+      project.forEach((singleProject) => {
+        const projectDate = new Date(singleProject.date);
+        parsedInput.push({
+          name: singleProject.name,
+          client_id: singleProject.client_id,
+          date: projectDate,
+          project_owner_id: singleProject.project_owner_id,
+        });
+      });
       return await prisma.projects.createMany({
-        data: project,
+        data: parsedInput,
       });
     }
   } catch (error) {
@@ -125,4 +140,3 @@ export async function deleteProjectById(id: number): Promise<Project> {
     throw error;
   }
 }
-
