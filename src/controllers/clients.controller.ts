@@ -12,9 +12,11 @@ import {
 } from '../services/clients.service.js';
 
 export class ClientController {
-  async getClients(_req: Request, res: Response): Promise<void> {
+  async getClients(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
+
     try {
-      const clients: IClient[] = await getClients();
+      const clients: IClient[] = await getClients(user_id);
       if (clients) {
         res.status(200).json({ success: true, data: clients });
       }
@@ -24,7 +26,12 @@ export class ClientController {
   }
 
   async createClients(req: Request, res: Response): Promise<void> {
-    const clientData: IClient | IClient[] = req.body;
+    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const clientData: IClient | IClient[] = {
+      name: req.body.name,
+      user_id: user_id,
+    };
+
     try {
       const result: IClient | Prisma.BatchPayload = await createClients(
         clientData,
@@ -94,6 +101,7 @@ export class ClientController {
   async updateClientById(req: Request, res: Response): Promise<void> {
     const clientData: IClient = {
       id: parseInt(req.params.id, 10),
+      user_id: 1,
       name: req.body.name,
     };
     try {

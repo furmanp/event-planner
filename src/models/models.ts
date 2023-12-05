@@ -2,22 +2,24 @@ export interface User {
   id?: number;
   username: string;
   password: string;
-  // projects?: number[]
 }
 
 export interface Employee {
   id?: number;
   first_name: string;
   last_name: string;
+  user_id: number;
 }
 
 export interface Client {
   id?: number;
+  user_id: number;
   name: string;
 }
 
 export interface Inventory {
   id?: number;
+  user_id: number;
   name: string;
   stock: number;
 }

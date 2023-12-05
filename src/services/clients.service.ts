@@ -2,9 +2,12 @@ import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 
-export async function getClients(): Promise<Client[]> {
+export async function getClients(user: number): Promise<Client[]> {
   try {
-    return await prisma.clients.findMany();
+    return await prisma.clients.findMany({where:{
+      user_id: user
+    }
+    });
   } catch (error) {
     console.log();
     throw error;

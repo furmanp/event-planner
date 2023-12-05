@@ -123,6 +123,7 @@ export class EmployeeController {
   async updateEmployeeById(req: Request, res: Response): Promise<void> {
     const employeeData: IEmployee = {
       id: parseInt(req.params.id, 10),
+      user_id: 1,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
     };

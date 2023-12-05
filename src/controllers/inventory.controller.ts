@@ -117,6 +117,7 @@ export class InventoryController {
   async updatesInventoryById(req: Request, res: Response): Promise<void> {
     const inventoryData: IInventory = {
       id: parseInt(req.params.id, 10),
+      user_id: 1,
       name: req.body.name,
       stock: req.body.stock,
     };
