@@ -22,6 +22,7 @@ export class EquipmentController {
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
     res: Response,
   ): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     try {
       const {
         query,
@@ -38,6 +39,7 @@ export class EquipmentController {
           data: IEquipment[];
           totalItems: number;
         } = await getEquipment(
+          user_id,
           parseInt(query.page, 10),
           parseInt(query.pageSize, 10),
           query.sortBy,

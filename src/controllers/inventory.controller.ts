@@ -24,6 +24,7 @@ export class InventoryController {
     res: Response,
   ): Promise<void> {
     try {
+      const user_id = parseInt(<string>req.headers.user_id, 10);
       const {
         query,
       }: Request<RequestParams, ResponseBody, RequestBody, RequestQuery> = req;
@@ -38,6 +39,7 @@ export class InventoryController {
           data: IInventory[];
           totalItems: number;
         } = await getInventory(
+          user_id,
           parseInt(query.page, 10),
           parseInt(query.pageSize, 10),
           query.sortBy,
@@ -51,7 +53,12 @@ export class InventoryController {
   }
 
   async updateInventory(req: Request, res: Response): Promise<void> {
-    const inventoryData: IInventory[] = req.body;
+    const user_id = parseInt(<string>req.headers.user_id, 10);
+    let inventoryData: IInventory[] = req.body;
+    inventoryData = inventoryData.map((item) => ({
+      ...item,
+      user_id: user_id,
+    }));
 
     try {
       const inventory: Prisma.BatchPayload = await updateInventory(
@@ -67,9 +74,10 @@ export class InventoryController {
     }
   }
 
-  async deleteInventory(_req: Request, res: Response): Promise<void> {
+  async deleteInventory(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     try {
-      const inventory: Prisma.BatchPayload = await deleteInventory();
+      const inventory: Prisma.BatchPayload = await deleteInventory(user_id);
       res.status(204).json({
         success: true,
         data: inventory,
@@ -81,7 +89,20 @@ export class InventoryController {
   }
 
   async createInventory(req: Request, res: Response): Promise<void> {
-    const inventoryData: IInventory | IInventory[] = req.body;
+    const user_id = parseInt(<string>req.headers.user_id, 10);
+    let inventoryData: IInventory | IInventory[] = req.body;
+
+    if (Array.isArray(inventoryData)) {
+      inventoryData = inventoryData.map((item) => ({
+        ...item,
+        user_id: user_id,
+      }));
+    } else {
+      inventoryData = {
+        ...inventoryData,
+        user_id: user_id,
+      };
+    }
     try {
       const result: IInventory | Prisma.BatchPayload = await createInventory(
         inventoryData,
@@ -104,9 +125,10 @@ export class InventoryController {
   }
 
   async getInventoryById(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     try {
       const id: number = parseInt(req.params.id);
-      const inventory: IInventory | null = await getInventoryById(id);
+      const inventory: IInventory | null = await getInventoryById(id, user_id);
       res.status(200).json({ success: true, data: inventory });
     } catch (error) {
       console.error('Error fetching inventory: ', error);
@@ -134,9 +156,10 @@ export class InventoryController {
   }
 
   async deleteInventoryById(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     const id: number = parseInt(req.params.id, 10);
     try {
-      const inventory: IInventory = await deleteInventoryById(id);
+      const inventory: IInventory = await deleteInventoryById(id, user_id);
       res.status(204).json({
         success: true,
         data: inventory,
