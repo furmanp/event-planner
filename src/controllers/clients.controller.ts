@@ -27,10 +27,19 @@ export class ClientController {
 
   async createClients(req: Request, res: Response): Promise<void> {
     const user_id = parseInt(<string>req.headers.user_id, 10);
-    const clientData: IClient | IClient[] = {
-      name: req.body.name,
-      user_id: user_id,
-    };
+    let clientData: IClient | IClient[] = req.body;
+
+    if (Array.isArray(clientData)) {
+      clientData = clientData.map((client) => ({
+        ...client,
+        user_id: user_id,
+      }));
+    } else {
+      clientData = {
+        name: req.body.name,
+        user_id: user_id,
+      };
+    }
 
     try {
       const result: IClient | Prisma.BatchPayload = await createClients(
@@ -54,7 +63,12 @@ export class ClientController {
   }
 
   async updateClients(req: Request, res: Response): Promise<void> {
-    const clientsData: IClient[] = req.body;
+    const user_id = parseInt(<string>req.headers.user_id, 10);
+    let clientsData: IClient[] = req.body;
+    clientsData = clientsData.map((client) => ({
+      ...client,
+      user_id: user_id,
+    }));
 
     try {
       const clients: Prisma.BatchPayload = await updateClients(clientsData);
@@ -102,9 +116,10 @@ export class ClientController {
   }
 
   async updateClientById(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     const clientData: IClient = {
       id: parseInt(req.params.id, 10),
-      user_id: 1,
+      user_id: user_id,
       name: req.body.name,
     };
     try {

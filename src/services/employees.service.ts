@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 
 export async function getEmployees(
+  user: number,
   page: number = 1,
   pageSize: number = 20,
   sortBy: string = 'id',
@@ -18,6 +19,9 @@ export async function getEmployees(
       orderBy[sortBy] = 'asc';
     }
     const data: Employee[] = await prisma.employees.findMany({
+      where: {
+        user_id: user,
+      },
       skip,
       take: pageSize,
       orderBy,
@@ -64,19 +68,28 @@ export async function updateEmployees(
   }
 }
 
-export async function deleteEmployees(): Promise<Prisma.BatchPayload> {
+export async function deleteEmployees(
+  user_id: number,
+): Promise<Prisma.BatchPayload> {
   try {
-    return await prisma.employees.deleteMany({});
+    return await prisma.employees.deleteMany({
+      where: {
+        user_id: user_id,
+      },
+    });
   } catch (error) {
     console.log();
     throw error;
   }
 }
 
-export async function getEmployeeById(id: number): Promise<Employee | null> {
+export async function getEmployeeById(
+  id: number,
+  user_id: number,
+): Promise<Employee | null> {
   try {
     const employee: Employee | null = await prisma.employees.findUnique({
-      where: { id: id },
+      where: { id: id, user_id: user_id },
     });
     return employee ? employee : null;
   } catch (error) {
@@ -90,7 +103,7 @@ export async function updateEmployeeById(
 ): Promise<Employee> {
   try {
     return await prisma.employees.update({
-      where: { id: employee.id },
+      where: { id: employee.id, user_id: employee.user_id },
       data: {
         first_name: employee.first_name,
         last_name: employee.last_name,
@@ -102,10 +115,13 @@ export async function updateEmployeeById(
   }
 }
 
-export async function deleteEmployeeById(id: number): Promise<Employee> {
+export async function deleteEmployeeById(
+  id: number,
+  user_id: number,
+): Promise<Employee> {
   try {
     return await prisma.employees.delete({
-      where: { id: id },
+      where: { id: id, user_id: user_id },
     });
   } catch (error) {
     console.log();

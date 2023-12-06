@@ -6,6 +6,7 @@ import { Equipment } from '../models/equipment.model.js';
 import { DateError, OverbookingError } from '../models/errors.js';
 
 export async function getEquipment(
+  user_id: number,
   page: number,
   pageSize: number,
   sortBy?: string,

@@ -1,12 +1,13 @@
 //TODO implement filtering functionality
-import { Inventory } from "../models/models.js";
-import prisma, { handlePrismaError } from "../libs/prisma.js";
-import { Prisma } from "@prisma/client";
+import { Inventory } from '../models/models.js';
+import prisma, { handlePrismaError } from '../libs/prisma.js';
+import { Prisma } from '@prisma/client';
 
 export async function getInventory(
+  user_id: number,
   page: number,
   pageSize: number,
-  sortBy?: string
+  sortBy?: string,
 ): Promise<{
   data: Inventory[];
   totalItems: number;
@@ -17,20 +18,23 @@ export async function getInventory(
     const orderBy: object = {};
 
     if (sortBy) {
-      orderBy[sortBy] = "asc";
+      orderBy[sortBy] = 'asc';
     }
 
     const data: Inventory[] = await prisma.inventory.findMany({
+      where: {
+        user_id: user_id,
+      },
       skip,
       take: pageSize,
-      orderBy
+      orderBy,
     });
 
     const totalItems: number = await prisma.inventory.count();
 
     return {
       data,
-      totalItems
+      totalItems,
     };
   } catch (error) {
     console.log();
@@ -39,11 +43,11 @@ export async function getInventory(
 }
 
 export async function updateInventory(
-  inventory: Inventory[]
+  inventory: Inventory[],
 ): Promise<Prisma.BatchPayload> {
   try {
     return await prisma.inventory.updateMany({
-      data: inventory
+      data: inventory,
     });
   } catch (error) {
     console.log();
@@ -51,9 +55,11 @@ export async function updateInventory(
   }
 }
 
-export async function deleteInventory(): Promise<Prisma.BatchPayload> {
+export async function deleteInventory(
+  user_id: number,
+): Promise<Prisma.BatchPayload> {
   try {
-    return await prisma.inventory.deleteMany({});
+    return await prisma.inventory.deleteMany({ where: { user_id: user_id } });
   } catch (error) {
     console.log();
     throw error;
@@ -61,16 +67,16 @@ export async function deleteInventory(): Promise<Prisma.BatchPayload> {
 }
 
 export async function createInventory(
-  inventory: Inventory | Inventory[]
+  inventory: Inventory | Inventory[],
 ): Promise<Promise<Inventory> | Promise<Prisma.BatchPayload>> {
   try {
     if (!Array.isArray(inventory)) {
       return await prisma.inventory.create({
-        data: inventory
+        data: inventory,
       });
     } else {
       return await prisma.inventory.createMany({
-        data: inventory
+        data: inventory,
       });
     }
   } catch (error) {
@@ -79,10 +85,13 @@ export async function createInventory(
   }
 }
 
-export async function getInventoryById(id: number): Promise<Inventory | null> {
+export async function getInventoryById(
+  id: number,
+  user_id: number,
+): Promise<Inventory | null> {
   try {
     const inventory: Inventory | null = await prisma.inventory.findUnique({
-      where: { id: id }
+      where: { id: id, user_id: user_id },
     });
     return inventory ? inventory : null;
   } catch (error) {
@@ -92,15 +101,15 @@ export async function getInventoryById(id: number): Promise<Inventory | null> {
 }
 
 export async function updateInventoryById(
-  inventory: Inventory
+  inventory: Inventory,
 ): Promise<Inventory> {
   try {
     return await prisma.inventory.update({
-      where: { id: inventory.id },
+      where: { id: inventory.id, user_id: inventory.user_id },
       data: {
         name: inventory.name,
-        stock: inventory.stock
-      }
+        stock: inventory.stock,
+      },
     });
   } catch (error) {
     console.log();
@@ -108,10 +117,13 @@ export async function updateInventoryById(
   }
 }
 
-export async function deleteInventoryById(id: number): Promise<Inventory> {
+export async function deleteInventoryById(
+  id: number,
+  user_id: number,
+): Promise<Inventory> {
   try {
     return await prisma.inventory.delete({
-      where: { id: id }
+      where: { id: id, user_id: user_id },
     });
   } catch (error) {
     console.log();
