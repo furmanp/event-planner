@@ -68,9 +68,10 @@ export class ClientController {
     }
   }
 
-  async deleteClients(_req: Request, res: Response): Promise<void> {
+  async deleteClients(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     try {
-      const client: Prisma.BatchPayload = await deleteClients();
+      const client: Prisma.BatchPayload = await deleteClients(user_id);
       res.status(204).json({
         success: true,
         data: client,
@@ -82,10 +83,12 @@ export class ClientController {
   }
 
   async getClientById(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     try {
       if (req.params.id) {
         const client: IClient | null = await getClientById(
           parseInt(req.params.id, 10),
+          user_id,
         );
         if (client) {
           res.status(200).json({ success: true, data: client });
@@ -117,10 +120,11 @@ export class ClientController {
   }
 
   async deleteClientById(req: Request, res: Response): Promise<void> {
+    const user_id = parseInt(<string>req.headers.user_id, 10);
     const id: number = parseInt(req.params.id, 10);
     try {
       //TODO add 404 if employee with provided ID doesn't exist
-      const client: IClient = await deleteClientById(id);
+      const client: IClient = await deleteClientById(id, user_id);
       res.status(204).json({
         success: true,
         data: client,
