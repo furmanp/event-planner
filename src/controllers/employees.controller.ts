@@ -22,7 +22,7 @@ export class EmployeeController {
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
     res: Response,
   ): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       const {
         query,
@@ -38,7 +38,7 @@ export class EmployeeController {
           data: IEmployee[];
           totalItems: number;
         } = await getEmployees(
-          user_id,
+          company_id,
           parseInt(query.page, 10),
           parseInt(query.pageSize, 10),
           query.sortBy,
@@ -52,21 +52,21 @@ export class EmployeeController {
 
   async createEmployees(req: Request, res: Response): Promise<void> {
     // TODO Add error handling in case wrong input is provided
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let employeeData: IEmployee | IEmployee[] = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      user_id: user_id,
+      company_id: company_id,
     };
     if (Array.isArray(employeeData)) {
       employeeData = employeeData.map((employee) => ({
         ...employee,
-        user_id: user_id,
+        company_id: company_id,
       }));
     } else {
       employeeData = {
         ...req.body,
-        user_id: user_id,
+        company_id: company_id,
       };
     }
     try {
@@ -93,11 +93,11 @@ export class EmployeeController {
   }
 
   async updateEmployees(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let employees: IEmployee[] = req.body;
     employees = employees.map((employee) => ({
       ...employee,
-      user_id: user_id,
+      company_id: company_id,
     }));
     try {
       const updatedEmployees: Prisma.BatchPayload = await updateEmployees(
@@ -114,9 +114,9 @@ export class EmployeeController {
   }
 
   async deleteAllEmployees(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
-      const deletedEmployees = await deleteEmployees(user_id);
+      const deletedEmployees = await deleteEmployees(company_id);
       res.status(204).json({
         success: true,
         data: deletedEmployees,
@@ -128,12 +128,12 @@ export class EmployeeController {
   }
 
   async getEmployeeById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       if (req.params.id) {
         const employee: IEmployee | null = await getEmployeeById(
           parseInt(req.params.id, 10),
-          user_id,
+          company_id,
         );
         if (employee) {
           res.status(200).json({ success: true, data: employee });
@@ -147,12 +147,12 @@ export class EmployeeController {
   }
 
   async updateEmployeeById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const employeeData: IEmployee = {
       id: parseInt(req.params.id, 10),
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      user_id: user_id,
+      company_id: company_id,
     };
     try {
       const employee: IEmployee = await updateEmployeeById(employeeData);
@@ -167,11 +167,11 @@ export class EmployeeController {
   }
 
   async deleteEmployeeById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const id: number = parseInt(req.params.id, 10);
     try {
       //TODO add 404 if employee with provided ID doesn't exist
-      const employee: IEmployee = await deleteEmployeeById(id, user_id);
+      const employee: IEmployee = await deleteEmployeeById(id, company_id);
       res.status(204).json({
         success: true,
         data: employee,

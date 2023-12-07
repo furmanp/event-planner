@@ -5,6 +5,7 @@ import { Project, ProjectList } from '../models/models.js';
 // export const prisma: PrismaClient = new PrismaClient();
 
 export async function getProjects(
+  company_id: number,
   page: number,
   pageSize: number,
   sortBy?: string,
@@ -22,6 +23,9 @@ export async function getProjects(
     }
 
     const data: ProjectList[] = await prisma.projects.findMany({
+      where: {
+        company_id: company_id,
+      },
       select: {
         id: true,
         name: true,
@@ -91,19 +95,26 @@ export async function updateProjects(
   }
 }
 
-export async function deleteProjects(): Promise<Prisma.BatchPayload> {
+export async function deleteProjects(
+  company_id: number,
+): Promise<Prisma.BatchPayload> {
   try {
-    return await prisma.projects.deleteMany({});
+    return await prisma.projects.deleteMany({
+      where: { company_id: company_id },
+    });
   } catch (error) {
     console.log();
     throw error;
   }
 }
 
-export async function getProjectById(id: number): Promise<Project | null> {
+export async function getProjectById(
+  id: number,
+  company_id: number,
+): Promise<Project | null> {
   try {
     const project: Project | null = await prisma.projects.findUnique({
-      where: { id: id },
+      where: { id: id, company_id: company_id },
     });
     return project ? project : null;
   } catch (error) {
@@ -130,10 +141,13 @@ export async function updateProjectById(project: Project): Promise<Project> {
   }
 }
 
-export async function deleteProjectById(id: number): Promise<Project> {
+export async function deleteProjectById(
+  id: number,
+  company_id: number,
+): Promise<Project> {
   try {
     return await prisma.projects.delete({
-      where: { id: id },
+      where: { id: id, company_id: company_id },
     });
   } catch (error) {
     console.log();

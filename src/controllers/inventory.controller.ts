@@ -24,7 +24,7 @@ export class InventoryController {
     res: Response,
   ): Promise<void> {
     try {
-      const user_id = parseInt(<string>req.headers.user_id, 10);
+      const company_id = parseInt(<string>req.headers.company_id, 10);
       const {
         query,
       }: Request<RequestParams, ResponseBody, RequestBody, RequestQuery> = req;
@@ -39,7 +39,7 @@ export class InventoryController {
           data: IInventory[];
           totalItems: number;
         } = await getInventory(
-          user_id,
+          company_id,
           parseInt(query.page, 10),
           parseInt(query.pageSize, 10),
           query.sortBy,
@@ -53,11 +53,11 @@ export class InventoryController {
   }
 
   async updateInventory(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let inventoryData: IInventory[] = req.body;
     inventoryData = inventoryData.map((item) => ({
       ...item,
-      user_id: user_id,
+      company_id: company_id,
     }));
 
     try {
@@ -75,9 +75,9 @@ export class InventoryController {
   }
 
   async deleteInventory(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
-      const inventory: Prisma.BatchPayload = await deleteInventory(user_id);
+      const inventory: Prisma.BatchPayload = await deleteInventory(company_id);
       res.status(204).json({
         success: true,
         data: inventory,
@@ -89,18 +89,18 @@ export class InventoryController {
   }
 
   async createInventory(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let inventoryData: IInventory | IInventory[] = req.body;
 
     if (Array.isArray(inventoryData)) {
       inventoryData = inventoryData.map((item) => ({
         ...item,
-        user_id: user_id,
+        company_id: company_id,
       }));
     } else {
       inventoryData = {
         ...inventoryData,
-        user_id: user_id,
+        company_id: company_id,
       };
     }
     try {
@@ -125,10 +125,13 @@ export class InventoryController {
   }
 
   async getInventoryById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       const id: number = parseInt(req.params.id);
-      const inventory: IInventory | null = await getInventoryById(id, user_id);
+      const inventory: IInventory | null = await getInventoryById(
+        id,
+        company_id,
+      );
       res.status(200).json({ success: true, data: inventory });
     } catch (error) {
       console.error('Error fetching inventory: ', error);
@@ -137,9 +140,10 @@ export class InventoryController {
   }
 
   async updatesInventoryById(req: Request, res: Response): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const inventoryData: IInventory = {
       id: parseInt(req.params.id, 10),
-      user_id: 1,
+      company_id: company_id,
       name: req.body.name,
       stock: req.body.stock,
     };
@@ -156,10 +160,10 @@ export class InventoryController {
   }
 
   async deleteInventoryById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const id: number = parseInt(req.params.id, 10);
     try {
-      const inventory: IInventory = await deleteInventoryById(id, user_id);
+      const inventory: IInventory = await deleteInventoryById(id, company_id);
       res.status(204).json({
         success: true,
         data: inventory,

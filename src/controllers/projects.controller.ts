@@ -23,6 +23,7 @@ export class ProjectController {
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
     res: Response,
   ): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       const {
         query,
@@ -38,6 +39,7 @@ export class ProjectController {
           data: IProjectList[];
           totalItems: number;
         } = await getProjects(
+          company_id,
           parseInt(query.page, 10),
           parseInt(query.pageSize, 10),
           query.sortBy,
@@ -50,7 +52,19 @@ export class ProjectController {
   }
 
   async createProjects(req: Request, res: Response): Promise<void> {
-    const projectData: IProject | IProject[] = req.body;
+    const company_id = parseInt(<string>req.headers.company_id, 10);
+    let projectData: IProject | IProject[] = req.body;
+    if (Array.isArray(projectData)) {
+      projectData = projectData.map((project) => ({
+        ...project,
+        company_id: company_id,
+      }));
+    } else {
+      projectData = {
+        ...projectData,
+        company_id: company_id,
+      };
+    }
     try {
       const result: IProject | Prisma.BatchPayload = await createProject(
         projectData,
@@ -87,9 +101,10 @@ export class ProjectController {
     }
   }
 
-  async deleteProjects(_req: Request, res: Response): Promise<void> {
+  async deleteProjects(req: Request, res: Response): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
-      const projects: Prisma.BatchPayload = await deleteProjects();
+      const projects: Prisma.BatchPayload = await deleteProjects(company_id);
       res.status(204).json({
         success: true,
         data: projects,
@@ -101,10 +116,12 @@ export class ProjectController {
   }
 
   async getProjectById(req: Request, res: Response): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       if (req.params.id) {
         const project: IProject | null = await getProjectById(
           parseInt(req.params.id, 10),
+          company_id,
         );
         if (project) {
           res.status(200).json({ success: true, data: project });
@@ -123,7 +140,7 @@ export class ProjectController {
       name: req.body.name,
       date: req.body.date,
       client_id: req.body.client_id,
-      project_owner_id: req.body.project_owner_id,
+      company_id: req.body.company_id,
     };
     try {
       const project: IProject = await updateProjectById(projectData);
@@ -139,8 +156,9 @@ export class ProjectController {
 
   async deleteProjectById(req: Request, res: Response): Promise<void> {
     const id: number = parseInt(req.params.id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
-      const project: IProject = await deleteProjectById(id);
+      const project: IProject = await deleteProjectById(id, company_id);
       res.status(204).json({
         success: true,
         data: project,

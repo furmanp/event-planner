@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
 import { User } from '../models/models.js';
-import { config } from "../../config.js";
+import { config } from '../../config.js';
 
-export const createJWT = (user: User) => {
-  const {sign} = jwt
+export const createJWT = (user: User): string => {
+  const { sign } = jwt;
   return sign({ id: user.id, username: user.username }, config.JWT_TOKEN);
 };
 

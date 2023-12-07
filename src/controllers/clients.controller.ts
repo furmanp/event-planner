@@ -13,10 +13,10 @@ import {
 
 export class ClientController {
   async getClients(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
 
     try {
-      const clients: IClient[] = await getClients(user_id);
+      const clients: IClient[] = await getClients(company_id);
       if (clients) {
         res.status(200).json({ success: true, data: clients });
       }
@@ -26,18 +26,18 @@ export class ClientController {
   }
 
   async createClients(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let clientData: IClient | IClient[] = req.body;
 
     if (Array.isArray(clientData)) {
       clientData = clientData.map((client) => ({
         ...client,
-        user_id: user_id,
+        company_id: company_id,
       }));
     } else {
       clientData = {
         name: req.body.name,
-        user_id: user_id,
+        company_id: company_id,
       };
     }
 
@@ -63,11 +63,11 @@ export class ClientController {
   }
 
   async updateClients(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     let clientsData: IClient[] = req.body;
     clientsData = clientsData.map((client) => ({
       ...client,
-      user_id: user_id,
+      company_id: company_id,
     }));
 
     try {
@@ -83,9 +83,9 @@ export class ClientController {
   }
 
   async deleteClients(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
-      const client: Prisma.BatchPayload = await deleteClients(user_id);
+      const client: Prisma.BatchPayload = await deleteClients(company_id);
       res.status(204).json({
         success: true,
         data: client,
@@ -97,12 +97,12 @@ export class ClientController {
   }
 
   async getClientById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     try {
       if (req.params.id) {
         const client: IClient | null = await getClientById(
           parseInt(req.params.id, 10),
-          user_id,
+          company_id,
         );
         if (client) {
           res.status(200).json({ success: true, data: client });
@@ -116,10 +116,10 @@ export class ClientController {
   }
 
   async updateClientById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const clientData: IClient = {
       id: parseInt(req.params.id, 10),
-      user_id: user_id,
+      company_id: company_id,
       name: req.body.name,
     };
     try {
@@ -135,11 +135,11 @@ export class ClientController {
   }
 
   async deleteClientById(req: Request, res: Response): Promise<void> {
-    const user_id = parseInt(<string>req.headers.user_id, 10);
+    const company_id = parseInt(<string>req.headers.company_id, 10);
     const id: number = parseInt(req.params.id, 10);
     try {
       //TODO add 404 if employee with provided ID doesn't exist
-      const client: IClient = await deleteClientById(id, user_id);
+      const client: IClient = await deleteClientById(id, company_id);
       res.status(204).json({
         success: true,
         data: client,

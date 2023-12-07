@@ -5,7 +5,7 @@ export class Project implements IProject {
   name: string;
   date: Date;
   client_id: number;
-  project_owner_id: number;
+  company_id: number;
 
   constructor(
     name: string,
@@ -16,6 +16,6 @@ export class Project implements IProject {
     this.name = name;
     this.date = date;
     this.client_id = client_id;
-    this.project_owner_id = project_owner_id;
+    this.company_id = project_owner_id;
   }
 }

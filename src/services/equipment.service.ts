@@ -82,7 +82,10 @@ export async function createEquipment(
       );
       console.log(availability);
 
-      const project = await getProjectById(equipment.project_id);
+      const project = await getProjectById(
+        equipment.project_id,
+        equipment.company_id,
+      );
       const newEquipment = new Equipment(equipment);
       if (await newEquipment.isAvailable(project!.date)) {
         return await prisma.project_equipment.create({
@@ -103,7 +106,10 @@ export async function createEquipment(
     } else {
       const parsedEquipment: IEquipment[] = [];
       for (const booking of equipment) {
-        const project = await getProjectById(booking.project_id);
+        const project = await getProjectById(
+          booking.project_id,
+          booking.company_id,
+        );
         const newEquipment = new Equipment(booking);
         if (!newEquipment.isAvailable(project!.date)) {
           throw new DateError({

@@ -9,8 +9,8 @@ describe('clients.service', () => {
   describe('get All Clients', () => {
     test.skip('returns users successfully', async (): Promise<void> => {
       const mockClients = [
-        { id: 1, name: 'Client A', user_id: 1 },
-        { id: 2, name: 'Client B', user_id: 1 },
+        { id: 1, name: 'Client A', company_id: 1 },
+        { id: 2, name: 'Client B', company_id: 1 },
       ];
       prisma.clients.findMany.mockResolvedValueOnce(mockClients);
       const result: Client[] = await getClients(1);
@@ -22,7 +22,7 @@ describe('clients.service', () => {
       describe('given provided data is correct', () => {
         test.skip('should return user object', async (): Promise<void> => {
           const newClient: Client = {
-            user_id: 1,
+            company_id: 1,
             name: 'testName',
           };
           prisma.clients.create.mockResolvedValue({ id: 1, ...newClient });
@@ -35,7 +35,7 @@ describe('clients.service', () => {
       describe('given clients name is an empty string', () => {
         test.skip('should throw an error', async (): Promise<void> => {
           const newClient: Client = {
-            user_id: 1,
+            company_id: 1,
             name: '',
           };
           await expect(() => createClients(newClient)).rejects.toThrowError(
@@ -49,8 +49,8 @@ describe('clients.service', () => {
       describe('given provided data is correct', () => {
         test.skip('should return number of created users', async (): Promise<void> => {
           const newClient: Client[] = [
-            { name: 'Client 1', user_id: 1 },
-            { name: 'Client 2', user_id: 1 },
+            { name: 'Client 1', company_id: 1 },
+            { name: 'Client 2', company_id: 1 },
           ];
 
           prisma.clients.createMany.mockResolvedValueOnce({
@@ -64,7 +64,7 @@ describe('clients.service', () => {
         test.skip('should return user object', async (): Promise<void> => {
           const newClient: Client = {
             name: '',
-            user_id: 1,
+            company_id: 1,
           };
           await expect(() => createClients(newClient)).rejects.toThrowError(
             new Error('Name field cannot be empty.'),
