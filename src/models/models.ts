@@ -8,18 +8,18 @@ export interface Employee {
   id?: number;
   first_name: string;
   last_name: string;
-  user_id: number;
+  company_id: number;
 }
 
 export interface Client {
   id?: number;
-  user_id: number;
+  company_id: number;
   name: string;
 }
 
 export interface Inventory {
   id?: number;
-  user_id: number;
+  company_id: number;
   name: string;
   stock: number;
 }
@@ -37,17 +37,23 @@ export interface ProjectList {
 
 export interface Project extends ProjectList {
   client_id: number;
-  project_owner_id: number;
+  company_id: number;
 }
 
 export interface Equipment {
   id?: number;
   project_id: number;
+  company_id: number;
   item_id: number;
   check_in: Date;
   check_out: Date;
 }
 
+export interface Company {
+  id?: number;
+  name: string;
+  user_id: number;
+}
 export interface RequestParams {}
 
 export interface ResponseBody {}

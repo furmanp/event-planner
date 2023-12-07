@@ -4,7 +4,7 @@ import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { Prisma } from '@prisma/client';
 
 export async function getInventory(
-  user_id: number,
+  company_id: number,
   page: number,
   pageSize: number,
   sortBy?: string,
@@ -23,7 +23,7 @@ export async function getInventory(
 
     const data: Inventory[] = await prisma.inventory.findMany({
       where: {
-        user_id: user_id,
+        company_id: company_id,
       },
       skip,
       take: pageSize,
@@ -56,10 +56,12 @@ export async function updateInventory(
 }
 
 export async function deleteInventory(
-  user_id: number,
+  company_id: number,
 ): Promise<Prisma.BatchPayload> {
   try {
-    return await prisma.inventory.deleteMany({ where: { user_id: user_id } });
+    return await prisma.inventory.deleteMany({
+      where: { company_id: company_id },
+    });
   } catch (error) {
     console.log();
     throw error;
@@ -87,11 +89,11 @@ export async function createInventory(
 
 export async function getInventoryById(
   id: number,
-  user_id: number,
+  company_id: number,
 ): Promise<Inventory | null> {
   try {
     const inventory: Inventory | null = await prisma.inventory.findUnique({
-      where: { id: id, user_id: user_id },
+      where: { id: id, company_id: company_id },
     });
     return inventory ? inventory : null;
   } catch (error) {
@@ -105,7 +107,7 @@ export async function updateInventoryById(
 ): Promise<Inventory> {
   try {
     return await prisma.inventory.update({
-      where: { id: inventory.id, user_id: inventory.user_id },
+      where: { id: inventory.id, company_id: inventory.company_id },
       data: {
         name: inventory.name,
         stock: inventory.stock,
@@ -119,11 +121,11 @@ export async function updateInventoryById(
 
 export async function deleteInventoryById(
   id: number,
-  user_id: number,
+  company_id: number,
 ): Promise<Inventory> {
   try {
     return await prisma.inventory.delete({
-      where: { id: id, user_id: user_id },
+      where: { id: id, company_id: company_id },
     });
   } catch (error) {
     console.log();

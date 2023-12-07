@@ -2,11 +2,11 @@ import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 
-export async function getClients(user_id: number): Promise<Client[]> {
+export async function getClients(company_id: number): Promise<Client[]> {
   try {
     return await prisma.clients.findMany({
       where: {
-        user_id: user_id,
+        company_id: company_id,
       },
     });
   } catch (error) {
@@ -56,12 +56,12 @@ export async function updateClients(
 }
 
 export async function deleteClients(
-  userId: number,
+  companyId: number,
 ): Promise<Prisma.BatchPayload> {
   try {
     return await prisma.clients.deleteMany({
       where: {
-        user_id: userId,
+        company_id: companyId,
       },
     });
   } catch (error) {
@@ -72,13 +72,13 @@ export async function deleteClients(
 
 export async function getClientById(
   id: number,
-  user_id: number,
+  companyId: number,
 ): Promise<Client | null> {
   try {
     const client: Client | null = await prisma.clients.findUnique({
       where: {
         id: id,
-        user_id: user_id,
+        company_id: companyId,
       },
     });
     return client ? client : null;
@@ -104,11 +104,11 @@ export async function updateClientById(client: Client): Promise<Client> {
 
 export async function deleteClientById(
   id: number,
-  user_id: number,
+  companyId: number,
 ): Promise<Client> {
   try {
     return await prisma.clients.delete({
-      where: { id: id, user_id: user_id },
+      where: { id: id, company_id: companyId },
     });
   } catch (error) {
     console.log();

@@ -8,22 +8,31 @@ datasource db {
 }
 
 model users {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+  id       Int      @id @default(autoincrement())
+  username String   @unique
   password String
+  company  company?
+}
+
+model company {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  user_id Int    @unique
 
   projects  projects[]
   clients   clients[]
   inventory inventory[]
   employees employees[]
+  equipment project_equipment[]
+  user      users               @relation(fields: [user_id], references: [id])
 }
 
 model clients {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique @db.VarChar
-  user_id  Int
-  projects projects[]
-  user     users      @relation(fields: [user_id], references: [id])
+  id         Int        @id @default(autoincrement())
+  name       String     @unique @db.VarChar
+  company_id Int
+  projects   projects[]
+  company    company    @relation(fields: [company_id], references: [id])
 }
 
 model projects {
@@ -31,38 +40,40 @@ model projects {
   name              String              @unique @db.VarChar
   client_id         Int
   date              DateTime            @db.Date
-  project_owner_id  Int
+  company_id        Int
   project_equipment project_equipment[]
   client            clients             @relation(fields: [client_id], references: [id])
-  project_owner     users               @relation(fields: [project_owner_id], references: [id])
+  project_owner     company             @relation(fields: [company_id], references: [id])
 }
 
 model project_equipment {
   id         Int       @unique @default(autoincrement())
   project_id Int
   item_id    Int
+  company_id Int
   check_in   DateTime  @db.Date
   check_out  DateTime  @db.Date
   equipment  inventory @relation(fields: [item_id], references: [id])
   project    projects  @relation(fields: [project_id], references: [id])
+  company    company   @relation(fields: [company_id], references: [id])
 }
 
 model inventory {
-  id        Int                 @id @default(autoincrement())
-  name      String              @unique @db.VarChar(50)
-  stock     Int
-  user_id   Int
-  equipment project_equipment[]
-  user      users               @relation(fields: [user_id], references: [id])
+  id         Int                 @id @default(autoincrement())
+  name       String              @unique @db.VarChar(50)
+  stock      Int
+  company_id Int
+  equipment  project_equipment[]
+  company    company             @relation(fields: [company_id], references: [id])
 }
 
 model employees {
   id         Int    @id @default(autoincrement())
   first_name String @db.VarChar(50)
   last_name  String @db.VarChar(50)
-  user_id    Int
+  company_id Int
 
-  user users @relation(fields: [user_id], references: [id])
+  company company @relation(fields: [company_id], references: [id])
 
   @@unique([first_name, last_name])
 }

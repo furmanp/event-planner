@@ -55,7 +55,7 @@ export async function createProject(
           name: project.name,
           client_id: project.client_id,
           date: projectDate,
-          project_owner_id: project.project_owner_id,
+          company_id: project.company_id,
         },
       });
     } else {
@@ -66,7 +66,7 @@ export async function createProject(
           name: singleProject.name,
           client_id: singleProject.client_id,
           date: projectDate,
-          project_owner_id: singleProject.project_owner_id,
+          company_id: singleProject.company_id,
         });
       });
       return await prisma.projects.createMany({
@@ -121,7 +121,7 @@ export async function updateProjectById(project: Project): Promise<Project> {
         name: project.name,
         date: project.date,
         client_id: project.client_id,
-        project_owner_id: project.project_owner_id,
+        company_id: project.company_id,
       },
     });
   } catch (error) {

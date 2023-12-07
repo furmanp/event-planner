@@ -6,7 +6,7 @@ import { Equipment } from '../models/equipment.model.js';
 import { DateError, OverbookingError } from '../models/errors.js';
 
 export async function getEquipment(
-  user_id: number,
+  company_id: number,
   page: number,
   pageSize: number,
   sortBy?: string,
@@ -24,6 +24,9 @@ export async function getEquipment(
     }
 
     const data: IEquipment[] = await prisma.project_equipment.findMany({
+      where: {
+        company_id: company_id,
+      },
       skip,
       take: pageSize,
       orderBy,
@@ -54,9 +57,13 @@ export async function updateEquipment(
   }
 }
 
-export async function deleteEquipment(): Promise<Prisma.BatchPayload> {
+export async function deleteEquipment(
+  company_id: number,
+): Promise<Prisma.BatchPayload> {
   try {
-    return await prisma.project_equipment.deleteMany({});
+    return await prisma.project_equipment.deleteMany({
+      where: { company_id: company_id },
+    });
   } catch (error) {
     console.log();
     throw error;
@@ -70,6 +77,7 @@ export async function createEquipment(
   try {
     if (!Array.isArray(equipment)) {
       const availability = await getEquipmentByDate(
+        equipment.company_id,
         new Date(equipment.check_in),
       );
       console.log(availability);
@@ -80,6 +88,7 @@ export async function createEquipment(
         return await prisma.project_equipment.create({
           data: {
             project_id: newEquipment.project_id,
+            company_id: newEquipment.company_id,
             item_id: newEquipment.item_id,
             check_in: newEquipment.check_in,
             check_out: newEquipment.check_out,
@@ -104,6 +113,7 @@ export async function createEquipment(
         } else {
           parsedEquipment.push({
             project_id: booking.project_id,
+            company_id: booking.company_id,
             item_id: booking.item_id,
             check_in: booking.check_in,
             check_out: booking.check_out,
@@ -179,10 +189,14 @@ export async function getEquipmentByProjectId(
     throw handlePrismaError(error);
   }
 }
-export async function getEquipmentByDate(date: Date): Promise<IEquipment[]> {
+export async function getEquipmentByDate(
+  company_id: number,
+  date: Date,
+): Promise<IEquipment[]> {
   try {
     const equipment: IEquipment[] = await prisma.project_equipment.findMany({
       where: {
+        company_id: company_id,
         check_in: {
           lte: date,
         },

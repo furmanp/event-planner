@@ -9,12 +9,14 @@ export class Equipment implements IEquipment {
   project_id: number;
   item_id: number;
   check_in: Date;
+  company_id: number;
   check_out: Date;
 
   constructor(equipment: IEquipment) {
     this.id = equipment.id;
     this.project_id = equipment.project_id;
     this.item_id = equipment.item_id;
+    this.company_id = equipment.company_id;
     this.check_in = new Date(equipment.check_in);
     this.check_out = new Date(equipment.check_out);
   }
@@ -24,10 +26,13 @@ export class Equipment implements IEquipment {
     if (formatedDate >= this.check_in && formatedDate <= this.check_out) {
       try {
         const reservations: IEquipment[] = (
-          await getEquipmentByDate(projectDate)
+          await getEquipmentByDate(this.company_id, projectDate)
         ).filter((item) => item.item_id == this.item_id);
 
-        const item: IInventory | null = await getInventoryById(this.item_id);
+        const item: IInventory | null = await getInventoryById(
+          this.item_id,
+          this.company_id,
+        );
         if (reservations.length < (item?.stock || 0)) {
           return true;
         } else {

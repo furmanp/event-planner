@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 
 export async function getEmployees(
-  user: number,
+  companyId: number,
   page: number = 1,
   pageSize: number = 20,
   sortBy: string = 'id',
@@ -20,7 +20,7 @@ export async function getEmployees(
     }
     const data: Employee[] = await prisma.employees.findMany({
       where: {
-        user_id: user,
+        company_id: companyId,
       },
       skip,
       take: pageSize,
@@ -69,12 +69,12 @@ export async function updateEmployees(
 }
 
 export async function deleteEmployees(
-  user_id: number,
+  companyId: number,
 ): Promise<Prisma.BatchPayload> {
   try {
     return await prisma.employees.deleteMany({
       where: {
-        user_id: user_id,
+        company_id: companyId,
       },
     });
   } catch (error) {
@@ -85,11 +85,11 @@ export async function deleteEmployees(
 
 export async function getEmployeeById(
   id: number,
-  user_id: number,
+  companyId: number,
 ): Promise<Employee | null> {
   try {
     const employee: Employee | null = await prisma.employees.findUnique({
-      where: { id: id, user_id: user_id },
+      where: { id: id, company_id: companyId },
     });
     return employee ? employee : null;
   } catch (error) {
@@ -103,7 +103,7 @@ export async function updateEmployeeById(
 ): Promise<Employee> {
   try {
     return await prisma.employees.update({
-      where: { id: employee.id, user_id: employee.user_id },
+      where: { id: employee.id, company_id: employee.company_id },
       data: {
         first_name: employee.first_name,
         last_name: employee.last_name,
@@ -117,11 +117,11 @@ export async function updateEmployeeById(
 
 export async function deleteEmployeeById(
   id: number,
-  user_id: number,
+  companyId: number,
 ): Promise<Employee> {
   try {
     return await prisma.employees.delete({
-      where: { id: id, user_id: user_id },
+      where: { id: id, company_id: companyId },
     });
   } catch (error) {
     console.log();
