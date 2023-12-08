@@ -2,16 +2,22 @@ import { User } from '../models/models.js';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { hashPassword } from '../modules/auth.js';
 import { Prisma } from '@prisma/client';
+// import { randomBytes } from 'crypto';
 
 export async function createUser(user: User): Promise<User> {
   if (!user.username || !user.password) {
     throw new Error('Username and password are required.');
   }
+  // TODO implement logic that generate verification token
+  // const verifyToken = randomBytes(32).toString('hex')
   try {
     return await prisma.users.create({
       data: {
         username: user.username,
         password: await hashPassword(user.password),
+        //mail: mail address,
+        //verifyToken: verifyToken,
+        //verified: false,
       },
     });
   } catch (error) {
@@ -36,3 +42,5 @@ export async function getUserById(username: string): Promise<User | null> {
     throw handlePrismaError(error);
   }
 }
+
+// export async function getUserByVerifyToken() {}

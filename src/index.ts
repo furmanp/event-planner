@@ -1,11 +1,9 @@
 import { Express } from 'express';
-import dotenv from 'dotenv';
 import { logger } from './utils/winston-logger.js';
 import { createServer } from './utils/server.js';
-
-dotenv.config();
+import { config } from '../config.js';
 const app: Express = createServer();
 
-app.listen(process.env.PORT, () => {
+app.listen(config.PORT, () => {
   logger.info(`App started`);
 });
