@@ -30,7 +30,9 @@ export async function getInventory(
       orderBy,
     });
 
-    const totalItems: number = await prisma.inventory.count();
+    const totalItems: number = await prisma.inventory.count({
+      where: { company_id: company_id },
+    });
 
     return {
       data,

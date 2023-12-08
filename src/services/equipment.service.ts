@@ -32,7 +32,9 @@ export async function getEquipment(
       orderBy,
     });
 
-    const totalItems: number = await prisma.project_equipment.count();
+    const totalItems: number = await prisma.project_equipment.count({
+      where: { company_id: company_id },
+    });
 
     return {
       data,

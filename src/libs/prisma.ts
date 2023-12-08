@@ -6,6 +6,13 @@ const prisma: PrismaClient = new PrismaClient();
 export function handlePrismaError(error: PrismaError): PrismaError {
   switch (error.constructor) {
     case Prisma.PrismaClientKnownRequestError:
+      if (error.code === 'P2002') {
+        return {
+          code: error.code,
+          message: 'Provided record already exists in the database',
+        };
+      }
+      break;
     case Prisma.PrismaClientUnknownRequestError:
     case Prisma.PrismaClientValidationError:
     case Prisma.PrismaClientInitializationError:
@@ -16,7 +23,7 @@ export function handlePrismaError(error: PrismaError): PrismaError {
       };
   }
   return {
-    code: 999,
+    code: '999',
     message: 'unknown error',
   };
 }

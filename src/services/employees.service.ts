@@ -1,6 +1,7 @@
 import { Employee } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
+import { PrismaError } from '../models/models.js';
 
 export async function getEmployees(
   companyId: number,
@@ -26,7 +27,9 @@ export async function getEmployees(
       take: pageSize,
       orderBy,
     });
-    const totalItems: number = await prisma.employees.count();
+    const totalItems: number = await prisma.employees.count({
+      where: { company_id: companyId },
+    });
     return {
       data,
       totalItems,
@@ -50,7 +53,16 @@ export async function createEmployee(
       });
     }
   } catch (error) {
-    console.log();
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        const prismaError: PrismaError = {
+          code: error.code,
+          message:
+            'Unique combination of first_name and last_name already exists in the database.',
+        };
+        throw prismaError;
+      }
+    }
     throw handlePrismaError(error);
   }
 }

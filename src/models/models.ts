@@ -25,7 +25,7 @@ export interface Inventory {
 }
 
 export interface PrismaError {
-  code?: number;
+  code?: string;
   message: string;
 }
 

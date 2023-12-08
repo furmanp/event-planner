@@ -5,7 +5,7 @@ export async function getCompanyByUserId(
   user_id: number,
 ): Promise<ICompany | null> {
   try {
-    const company: ICompany | null = await prisma.company.findUnique({
+    const company: ICompany | null = await prisma.company.findUniqueOrThrow({
       where: { user_id: user_id },
     });
     return company ? company : null;

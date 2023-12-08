@@ -36,7 +36,9 @@ export async function getProjects(
       orderBy,
     });
 
-    const totalItems: number = await prisma.projects.count();
+    const totalItems: number = await prisma.projects.count({
+      where: { company_id: company_id },
+    });
 
     return {
       data,

@@ -75,5 +75,5 @@ model employees {
 
   company company @relation(fields: [company_id], references: [id])
 
-  @@unique([first_name, last_name])
+  @@unique([first_name, last_name, company_id])
 }

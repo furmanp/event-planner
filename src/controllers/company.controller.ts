@@ -17,7 +17,7 @@ export class CompanyController {
 
       res
         .status(201)
-        .json({ success: true, data: result, message: 'Client created.' });
+        .json({ success: true, data: result, message: 'Company created.' });
     } catch (error) {
       res.status(500).json({ success: false, error: error });
     }
