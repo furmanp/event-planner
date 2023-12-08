@@ -29,21 +29,25 @@ model company {
 
 model clients {
   id         Int        @id @default(autoincrement())
-  name       String     @unique @db.VarChar
+  name       String     @db.VarChar
   company_id Int
   projects   projects[]
   company    company    @relation(fields: [company_id], references: [id])
+
+  @@unique([name, company_id])
 }
 
 model projects {
   id                Int                 @id @default(autoincrement())
-  name              String              @unique @db.VarChar
+  name              String              @db.VarChar
   client_id         Int
   date              DateTime            @db.Date
   company_id        Int
   project_equipment project_equipment[]
   client            clients             @relation(fields: [client_id], references: [id])
   project_owner     company             @relation(fields: [company_id], references: [id])
+
+  @@unique([name, company_id])
 }
 
 model project_equipment {
@@ -60,11 +64,13 @@ model project_equipment {
 
 model inventory {
   id         Int                 @id @default(autoincrement())
-  name       String              @unique @db.VarChar(50)
+  name       String              @db.VarChar(50)
   stock      Int
   company_id Int
   equipment  project_equipment[]
   company    company             @relation(fields: [company_id], references: [id])
+
+  @@unique([name, company_id])
 }
 
 model employees {
