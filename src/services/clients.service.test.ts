@@ -1,13 +1,13 @@
 import { describe, vi, test, expect } from 'vitest';
-import prisma from '../src/libs/__mocks__/prisma.js';
-import { createClients, getClients } from '../src/services/clients.service.js';
-import { Client } from '../src/models/models.js';
+import prisma from '../libs/__mocks__/prisma.js';
+import { createClients, getClientById, getClients } from './clients.service.js';
+import { Client } from '../models/models.js';
 
-vi.mock('../src/libs/prisma');
+vi.mock('../libs/prisma');
 
 describe('clients.service', () => {
   describe('get All Clients', () => {
-    test.skip('returns users successfully', async (): Promise<void> => {
+    test('returns users successfully', async (): Promise<void> => {
       const mockClients = [
         { id: 1, name: 'Client A', company_id: 1 },
         { id: 2, name: 'Client B', company_id: 1 },
@@ -20,7 +20,7 @@ describe('clients.service', () => {
   describe('createClients', () => {
     describe('create single client', () => {
       describe('given provided data is correct', () => {
-        test.skip('should return user object', async (): Promise<void> => {
+        test('should return user object', async (): Promise<void> => {
           const newClient: Client = {
             company_id: 1,
             name: 'testName',
@@ -33,7 +33,7 @@ describe('clients.service', () => {
         });
       });
       describe('given clients name is an empty string', () => {
-        test.skip('should throw an error', async (): Promise<void> => {
+        test('should throw an error', async (): Promise<void> => {
           const newClient: Client = {
             company_id: 1,
             name: '',
@@ -47,7 +47,7 @@ describe('clients.service', () => {
 
     describe('create multiple clients', () => {
       describe('given provided data is correct', () => {
-        test.skip('should return number of created users', async (): Promise<void> => {
+        test('should return number of created users', async (): Promise<void> => {
           const newClient: Client[] = [
             { name: 'Client 1', company_id: 1 },
             { name: 'Client 2', company_id: 1 },
@@ -61,7 +61,7 @@ describe('clients.service', () => {
         });
       });
       describe('given clients name is an empty string', () => {
-        test.skip('should return user object', async (): Promise<void> => {
+        test('should return user object', async (): Promise<void> => {
           const newClient: Client = {
             name: '',
             company_id: 1,
@@ -74,10 +74,37 @@ describe('clients.service', () => {
     });
   });
   describe('get Client by Id', () => {
-    describe('given record with provided ID exists', () => {});
-    describe('given record with provided ID does not exist', () => {});
+    const newClient: Client = {
+      id: 1,
+      company_id: 1,
+      name: 'company name',
+    };
+    describe('given record with provided ID exists', () => {
+      test('Should return User object', async (): Promise<void> => {
+        prisma.clients.findUnique.mockResolvedValue({
+          id: 1,
+          ...newClient,
+        });
+        const client: Client | null = await getClientById(
+          newClient.id!,
+          newClient.company_id,
+        );
+        expect(client).toStrictEqual(newClient);
+      });
+    });
+
+    describe('given record with provided ID does not exist', () => {
+      test('Should return null', async (): Promise<void> => {
+        prisma.clients.findUnique.mockResolvedValue(null);
+        const client: Client | null = await getClientById(
+          newClient.id!,
+          newClient.company_id,
+        );
+        expect(client).toBeNull();
+      });
+    });
   });
-  describe('create Client', () => {});
-  describe('update Client', () => {});
-  describe('delete Client', () => {});
+  describe.skip('create Client', () => {});
+  describe.skip('update Client', () => {});
+  describe.skip('delete Client', () => {});
 });

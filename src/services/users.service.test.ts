@@ -1,12 +1,9 @@
 import { describe, expect, test, vi } from 'vitest';
-import {
-  createUser,
-  getUserByUsername,
-} from '../src/services/users.service.js';
-import { User } from '../src/models/models.js';
-import prisma from '../src/libs/__mocks__/prisma.js';
+import { User } from '../models/models.js';
+import prisma from '../libs/__mocks__/prisma.js';
+import { createUser, getUserByUsername } from './users.service.js';
 
-vi.mock('../src/libs/prisma');
+vi.mock('../libs/prisma');
 
 describe('users.service', () => {
   describe('createUser', () => {
@@ -50,7 +47,7 @@ describe('users.service', () => {
     });
   });
 
-  describe('getUserByUsername', () => {
+  describe('getUserById', () => {
     describe('given user with provided username exitsts', () => {
       test('Should return User object', async (): Promise<void> => {
         const newUser: User = {

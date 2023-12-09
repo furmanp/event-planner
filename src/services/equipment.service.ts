@@ -75,7 +75,6 @@ export async function deleteEquipment(
 export async function createEquipment(
   equipment: IEquipment | IEquipment[],
 ): Promise<IEquipment | Prisma.BatchPayload> {
-  // TODO check stock
   try {
     if (!Array.isArray(equipment)) {
       const availability = await getEquipmentByDate(

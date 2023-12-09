@@ -1,6 +1,7 @@
 import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
+import { DataError } from '../models/errors.js';
 
 export async function getClients(company_id: number): Promise<Client[]> {
   try {
@@ -21,7 +22,10 @@ export async function createClients(
   try {
     if (!Array.isArray(client)) {
       if (!client.name) {
-        throw new Error('Client name is required.');
+        throw new DataError({
+          name: 'Missing information error',
+          message: 'Name field cannot be empty.',
+        });
       }
       return await prisma.clients.create({
         data: client,
@@ -29,7 +33,10 @@ export async function createClients(
     } else {
       for (const individualClient of client) {
         if (!individualClient.name) {
-          throw new Error('Client name is required.');
+          throw new DataError({
+            name: 'Missing information error',
+            message: 'Name field cannot be empty.',
+          });
         }
       }
       return await prisma.clients.createMany({
@@ -37,8 +44,9 @@ export async function createClients(
       });
     }
   } catch (error) {
-    console.log();
-    throw handlePrismaError(error);
+    if (error instanceof DataError) {
+      throw error;
+    } else throw handlePrismaError(error);
   }
 }
 
@@ -83,8 +91,7 @@ export async function getClientById(
     });
     return client ? client : null;
   } catch (error) {
-    console.log();
-    throw error;
+    throw handlePrismaError(error);
   }
 }
 

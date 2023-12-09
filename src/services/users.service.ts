@@ -32,7 +32,9 @@ export async function createUser(user: User): Promise<User> {
   }
 }
 
-export async function getUserById(username: string): Promise<User | null> {
+export async function getUserByUsername(
+  username: string,
+): Promise<User | null> {
   try {
     const user: User | null = await prisma.users.findUnique({
       where: { username: username },

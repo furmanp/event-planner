@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/models.js';
-import { createUser, getUserById } from '../services/users.service.js';
+import { createUser, getUserByUsername } from '../services/users.service.js';
 import { comparePasswords, createJWT } from '../modules/auth.js';
 
 export class UsersController {
@@ -22,7 +22,7 @@ export class UsersController {
 
   async singIn(req: Request, res: Response): Promise<void> {
     try {
-      const user: User | null = await getUserById(req.body.username);
+      const user: User | null = await getUserByUsername(req.body.username);
       if (!user) {
         res.status(404).json({ success: false, message: 'User not found.' });
         return;
