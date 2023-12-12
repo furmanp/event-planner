@@ -2,6 +2,7 @@ import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { DataError } from '../models/errors.js';
+import { checkIfCompanyExists } from './company.service.js';
 
 export async function getClients(company_id: number): Promise<Client[]> {
   try {
@@ -50,18 +51,18 @@ export async function createClients(
   }
 }
 
-export async function updateClients(
-  clients: Client[],
-): Promise<Prisma.BatchPayload> {
-  try {
-    return await prisma.clients.updateMany({
-      data: clients,
-    });
-  } catch (error) {
-    console.log();
-    throw handlePrismaError(error);
-  }
-}
+// THIS IMPLEMENTATION IS WRONG - UPDATE MANY WORKS ONLY IF ALL RECORDS ALL UPDATED WITH THE SAME VALUE
+// export async function updateClients(
+//   clients: Client[],
+// ): Promise<Prisma.BatchPayload> {
+//   try {
+//     return await prisma.clients.updateMany({
+//       data: clients,
+//     });
+//   } catch (error) {
+//     throw handlePrismaError(error);
+//   }
+// }
 
 export async function deleteClients(
   companyId: number,
@@ -114,11 +115,20 @@ export async function deleteClientById(
   companyId: number,
 ): Promise<Client> {
   try {
-    return await prisma.clients.delete({
-      where: { id: id, company_id: companyId },
-    });
+    const company = await checkIfCompanyExists(companyId);
+    if (company) {
+      return await prisma.clients.delete({
+        where: { id: id, company_id: companyId },
+      });
+    } else {
+      throw new DataError({
+        name: 'Wrong copmany ID',
+        message: 'Company ID provided does not exist in the database.',
+      });
+    }
   } catch (error) {
-    console.log();
-    throw error;
+    if (error instanceof DataError) {
+      throw error;
+    } else throw handlePrismaError(error);
   }
 }

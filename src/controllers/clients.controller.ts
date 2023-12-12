@@ -8,7 +8,6 @@ import {
   getClientById,
   getClients,
   updateClientById,
-  updateClients,
 } from '../services/clients.service.js';
 
 export class ClientController {
@@ -62,25 +61,25 @@ export class ClientController {
     }
   }
 
-  async updateClients(req: Request, res: Response): Promise<void> {
-    const company_id = parseInt(<string>req.headers.company_id, 10);
-    let clientsData: IClient[] = req.body;
-    clientsData = clientsData.map((client) => ({
-      ...client,
-      company_id: company_id,
-    }));
+  // async updateClients(req: Request, res: Response): Promise<void> {
+  //   const company_id = parseInt(<string>req.headers.company_id, 10);
+  //   let clientsData: IClient[] = req.body;
+  //   clientsData = clientsData.map((client) => ({
+  //     ...client,
+  //     company_id: company_id,
+  //   }));
 
-    try {
-      const clients: Prisma.BatchPayload = await updateClients(clientsData);
-      res.status(204).json({
-        success: true,
-        data: clients,
-        message: 'Client updated successfully',
-      });
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
+  //   try {
+  //     const clients: Prisma.BatchPayload = await updateClients(clientsData);
+  //     res.status(204).json({
+  //       success: true,
+  //       data: clients,
+  //       message: 'Client updated successfully',
+  //     });
+  //   } catch (error) {
+  //     res.status(500).json(error);
+  //   }
+  // }
 
   async deleteClients(req: Request, res: Response): Promise<void> {
     const company_id = parseInt(<string>req.headers.company_id, 10);
@@ -88,7 +87,7 @@ export class ClientController {
       const client: Prisma.BatchPayload = await deleteClients(company_id);
       res.status(204).json({
         success: true,
-        data: client,
+        data: client.count,
         message: 'Clients deleted successfully',
       });
     } catch (error) {

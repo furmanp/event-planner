@@ -5,12 +5,12 @@ const router: Router = express.Router();
 const clientController: ClientController = new ClientController();
 
 router.get('/clients', clientController.getClients);
-router.post('/client', clientController.createClients);
-router.put('/client', clientController.updateClients);
-router.delete('/client', clientController.deleteClients);
+router.post('/clients', clientController.createClients);
+// router.put('/clients', clientController.updateClients);
+router.delete('/clients', clientController.deleteClients);
 router.get('/clients/:id', clientController.getClientById);
 router.post('/clients/:id');
-router.put('/client/:id', clientController.updateClientById);
-router.delete('/client/:id', clientController.updateClientById);
+router.put('/clients/:id', clientController.updateClientById);
+router.delete('/clients/:id', clientController.updateClientById);
 
 export default router;

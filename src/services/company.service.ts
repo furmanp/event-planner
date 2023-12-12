@@ -26,3 +26,16 @@ export async function createCompany(company: ICompany): Promise<ICompany> {
     throw handlePrismaError(error);
   }
 }
+
+export async function checkIfCompanyExists(
+  company_id: number,
+): Promise<boolean> {
+  try {
+    const company = await prisma.company.findUnique({
+      where: { id: company_id },
+    });
+    return company ? true : false;
+  } catch (error) {
+    throw handlePrismaError;
+  }
+}
