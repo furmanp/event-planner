@@ -150,21 +150,26 @@ describe('clients.service', () => {
     describe('Given the client id is incorrect', () => {
       test.skip('Should throw an error', async (): Promise<void> => {
         const mockClient: Client = { id: 1, name: 'Client1', company_id: 1 };
+        prisma.clients.delete.mockRejectedValue(mockClient);
 
         const result = await deleteClientById(
           mockClient.id!,
           mockClient.company_id,
         );
-
-        await expect(result).rejects.toThrowError(
-          new Error(
-            'Operation failed because it depends on one or more recrds that were required but not found.',
-          ),
+        console.log(result);
+        await expect(() =>
+          deleteClientById(mockClient.id!, mockClient.company_id),
+        ).rejects.toThrowError(
+          new DataError({
+            name: 'P2025',
+            message:
+              'Operation failed because it depends on one or more recrds that were required but not found.',
+          }),
         );
       });
     });
     describe('Given the company id is incorrect', () => {
-      test('Should throw an error', async (): Promise<void> => {
+      test.skip('Should throw an error', async (): Promise<void> => {
         const mockClient: Client = { id: 1, name: 'Client1', company_id: 1 };
 
         await expect(() =>

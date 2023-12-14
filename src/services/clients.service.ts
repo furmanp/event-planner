@@ -2,7 +2,6 @@ import { Client } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { DataError } from '../models/errors.js';
-import { checkIfCompanyExists } from './company.service.js';
 
 export async function getClients(company_id: number): Promise<Client[]> {
   try {
@@ -115,17 +114,9 @@ export async function deleteClientById(
   companyId: number,
 ): Promise<Client> {
   try {
-    const company = await checkIfCompanyExists(companyId);
-    if (company) {
-      return await prisma.clients.delete({
-        where: { id: id, company_id: companyId },
-      });
-    } else {
-      throw new DataError({
-        name: 'Wrong copmany ID',
-        message: 'Company ID provided does not exist in the database.',
-      });
-    }
+    return await prisma.clients.delete({
+      where: { id: id, company_id: companyId },
+    });
   } catch (error) {
     if (error instanceof DataError) {
       throw error;

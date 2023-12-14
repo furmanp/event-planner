@@ -15,6 +15,9 @@ export async function getCompanyByUserId(
 }
 
 export async function createCompany(company: ICompany): Promise<ICompany> {
+  if (!company.name) {
+    throw new Error("Company's name is required.");
+  }
   try {
     return await prisma.company.create({
       data: {
