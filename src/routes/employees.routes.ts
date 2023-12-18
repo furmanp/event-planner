@@ -8,6 +8,7 @@ router.get('/employees', employeeController.getEmployees);
 router.post('/employees', employeeController.createEmployees);
 router.put('/employees', employeeController.updateEmployees);
 router.delete('/employees', employeeController.deleteAllEmployees);
+
 router.get('/employees/:id', employeeController.getEmployeeById);
 router.post('/employees/:id'); // error
 router.put('/employees/:id', employeeController.updateEmployeeById);
