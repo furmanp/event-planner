@@ -1,4 +1,4 @@
-import { describe, vi, test, expect } from 'vitest';
+import { describe, vi } from 'vitest';
 vi.mock('../libs/prisma');
 
 describe.skip('Inventory.service', () => {

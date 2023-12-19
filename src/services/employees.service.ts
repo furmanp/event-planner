@@ -2,6 +2,7 @@ import { Employee } from '../models/models.js';
 import { Prisma } from '@prisma/client';
 import prisma, { handlePrismaError } from '../libs/prisma.js';
 import { PrismaError } from '../models/models.js';
+import { DataError } from '../models/errors.js';
 
 export async function getEmployees(
   companyId: number,
@@ -12,6 +13,12 @@ export async function getEmployees(
   data: Employee[];
   totalItems: number;
 }> {
+  if (page <= 0 || pageSize <= 0) {
+    throw new DataError({
+      name: 'Pagination Data Mismatch',
+      message: 'Check your pagination data',
+    });
+  }
   try {
     const skip: number =
       pageSize > 20 ? (page - 1) * 20 : (page - 1) * pageSize;
@@ -32,10 +39,12 @@ export async function getEmployees(
     });
     return {
       data,
-      totalItems,
+      totalItems: totalItems | 0,
     };
   } catch (error) {
-    throw handlePrismaError(error);
+    if (error instanceof DataError) {
+      throw error;
+    } else throw handlePrismaError(error);
   }
 }
 
