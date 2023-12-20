@@ -79,7 +79,21 @@ describe('employees.service', () => {
           );
         });
         describe('given employee data is incorrect', () => {
-          test.todo('should throw an error', async () => {});
+          test('should throw an error', async () => {
+            const newEmployee: Employee = {
+              first_name: '',
+              last_name: 'test',
+              company_id: 2,
+            };
+            await expect(() =>
+              createEmployee(newEmployee),
+            ).rejects.toThrowError(
+              new DataError({
+                name: 'Missing information error',
+                message: 'One of required information is missing',
+              }),
+            );
+          });
         });
       });
     });

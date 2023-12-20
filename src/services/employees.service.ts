@@ -53,6 +53,13 @@ export async function createEmployee(
 ): Promise<Promise<Employee> | Promise<Prisma.BatchPayload>> {
   try {
     if (!Array.isArray(employee)) {
+      if (!employee.first_name || !employee.last_name || !employee.company_id) {
+        throw new DataError({
+          name: 'Missing information error',
+          message: 'One of required information is missing',
+        });
+      }
+
       return await prisma.employees.create({
         data: employee,
       });
@@ -71,8 +78,11 @@ export async function createEmployee(
         };
         throw prismaError;
       }
+    } else if (error instanceof DataError) {
+      throw error;
+    } else {
+      throw handlePrismaError(error);
     }
-    throw handlePrismaError(error);
   }
 }
 
