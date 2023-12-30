@@ -45,4 +45,30 @@ export async function getUserByUsername(
   }
 }
 
+export async function getUserById(id: number): Promise<User | null> {
+  try {
+    const user: User | null = await prisma.users.findUnique({
+      where: { id: id },
+    });
+    return user ? user : null;
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
+}
+
+export async function updateUserPassword(
+  id: number,
+  password: string,
+): Promise<User> {
+  try {
+    return await prisma.users.update({
+      where: { id: id },
+      data: {
+        password: password,
+      },
+    });
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
+}
 // export async function getUserByVerifyToken() {}

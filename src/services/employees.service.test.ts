@@ -3,7 +3,6 @@ import { Employee } from '../models/models.js';
 import { createEmployee, getEmployees } from './employees.service.js';
 import prisma from '../libs/__mocks__/prisma.js';
 import { DataError } from '../models/errors.js';
-import { objectContainsKey } from 'vitest-mock-extended';
 vi.mock('../libs/prisma');
 
 describe('employees.service', () => {

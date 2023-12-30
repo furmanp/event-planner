@@ -14,4 +14,7 @@ router.post(
   userController.createUsersHandler,
 );
 router.post('/signin', userController.singIn);
+router.post('/forgot-password', userController.forgotPassword);
+router.post('/reset-password/:id/:token', userController.resetPassword);
+
 router.use('/api', ProtectMiddleware.protect, routes);

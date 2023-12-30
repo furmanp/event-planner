@@ -80,9 +80,8 @@ export async function createEmployee(
       }
     } else if (error instanceof DataError) {
       throw error;
-    } else {
-      throw handlePrismaError(error);
     }
+    throw handlePrismaError(error);
   }
 }
 
