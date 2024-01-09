@@ -9,9 +9,85 @@ import {
 } from '../services/users.service.js';
 import { comparePasswords, createJWT, hashPassword } from '../modules/auth.js';
 import { config } from '../../config.js';
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Book:
+ *       type: object
+ *       required:
+ *         - title
+ *         - author
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the book
+ *         title:
+ *           type: string
+ *           description: The book title
+ *         author:
+ *           type: string
+ *           description: The book author
+ *       example:
+ *         id: d5fE_asz
+ *         title: The New Turing Omnibus
+ *         author: Alexander K. Dewdney
+ */
 
+ /**
+  * @swagger
+  * tags:
+  *   name: Books
+  *   description: The books managing API
+  */
 export class UsersController {
-  async createUsersHandler(req: Request, res: Response): Promise<void> {
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     description: Creates a new user with the given username, password, and company.
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       description: User object that needs to be created
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+ *                 message:
+ *                   type: string
+ *                   example: User created.
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error message.
+ */
+async createUsersHandler(req: Request, res: Response): Promise<void> {
     const userData: User = req.body;
     let token: string = '';
     try {
