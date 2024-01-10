@@ -21,6 +21,48 @@ import {
 } from '../services/projects.service.js';
 import { Prisma } from '@prisma/client';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The project ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           description: The name of the project.
+ *           example: "Project Alpha"
+ *         client_id:
+ *           type: integer
+ *           description: The ID of the client associated with the project.
+ *           example: 1
+ *         date:
+ *           type: string
+ *           format: date
+ *           description: The date the project was created or is set to start.
+ *           example: "2024-01-10"
+ *         company_id:
+ *           type: integer
+ *           description: The ID of the company owning the project.
+ *           example: 1
+ *         project_equipment:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ProjectEquipment'
+ *       required:
+ *         - name
+ *         - client_id
+ *         - date
+ *         - company_id
+ *       uniqueItems:
+ *         - name
+ *         - company_id
+ */
+
 export class ProjectController {
   async getProjects(
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,

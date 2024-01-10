@@ -17,6 +17,38 @@ import {
 } from '../services/employees.service.js';
 import { Prisma } from '@prisma/client';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Employee:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The employee ID.
+ *           example: 1
+ *         first_name:
+ *           type: string
+ *           description: The first name of the employee.
+ *           example: "John"
+ *         last_name:
+ *           type: string
+ *           description: The last name of the employee.
+ *           example: "Doe"
+ *         company_id:
+ *           type: integer
+ *           description: The ID of the company the employee works for.
+ *           example: 1
+ *       required:
+ *         - first_name
+ *         - last_name
+ *         - company_id
+ *       uniqueItems:
+ *         - first_name
+ *         - last_name
+ *         - company_id
+ */
 export class EmployeeController {
   async getEmployees(
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,

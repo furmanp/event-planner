@@ -17,6 +17,40 @@ import {
 } from '../services/equipment.service.js';
 import { Equipment as IEquipment } from '../models/models.js';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProjectEquipment:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The project equipment ID.
+ *           example: 1
+ *         project_id:
+ *           type: integer
+ *           description: The ID of the project associated with the equipment.
+ *           example: 1
+ *         item_id:
+ *           type: integer
+ *           description: The ID of the equipment item.
+ *           example: 1
+ *         company_id:
+ *           type: integer
+ *           description: The ID of the company owning the equipment.
+ *           example: 1
+ *         check_in:
+ *           type: string
+ *           format: date
+ *           description: The check-in date of the equipment.
+ *           example: "2024-01-10"
+ *         check_out:
+ *           type: string
+ *           format: date
+ *           description: The check-out date of the equipment.
+ *           example: "2024-01-15"
+ */
 export class EquipmentController {
   async getEquipment(
     req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,

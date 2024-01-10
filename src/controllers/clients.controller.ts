@@ -10,6 +10,36 @@ import {
   updateClientById,
 } from '../services/clients.service.js';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Client:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The client ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           description: The name of the client.
+ *           example: "Client Inc."
+ *         company_id:
+ *           type: integer
+ *           description: The ID of the company associated with the client.
+ *           example: 1
+ *         projects:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Project'
+ *       required:
+ *         - name
+ *         - company_id
+ *       uniqueItems:
+ *         - name
+ *         - company_id
+ */
 export class ClientController {
   async getClients(req: Request, res: Response): Promise<void> {
     const company_id = parseInt(<string>req.headers.company_id, 10);

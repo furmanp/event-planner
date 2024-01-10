@@ -17,6 +17,42 @@ import {
   updateInventoryById,
 } from '../services/inventory.service.js';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Inventory:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The inventory item ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           description: The name of the inventory item.
+ *           example: "Item Alpha"
+ *         stock:
+ *           type: integer
+ *           description: The stock count of the inventory item.
+ *           example: 100
+ *         company_id:
+ *           type: integer
+ *           description: The ID of the company owning the inventory item.
+ *           example: 1
+ *         equipment:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ProjectEquipment'
+ *       required:
+ *         - name
+ *         - stock
+ *         - company_id
+ *       uniqueItems:
+ *         - name
+ *         - company_id
+ */
+
 export class InventoryController {
   //TODO add filtering and sorting the data
   async getInventory(
