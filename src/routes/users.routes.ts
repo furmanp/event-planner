@@ -9,6 +9,8 @@ const userController: UsersController = new UsersController();
  * @swagger
  * /user:
  *   post:
+ *     tags:
+ *       - Users
  *     summary: Create a new user
  *     description: This endpoint creates a new user and returns a JWT token upon successful creation.
  *     requestBody:
@@ -63,6 +65,8 @@ router.post(
  * @swagger
  * /signin:
  *   post:
+ *     tags:
+ *       - Users
  *     summary: Sign in a user
  *     description: This endpoint signs in a user and returns a JWT token upon successful authentication.
  *     requestBody:
@@ -139,6 +143,7 @@ router.post('/signin', userController.singIn);
  *   post:
  *     tags:
  *       - Users
+ *     summary: Create a one time link to reset user password
  *     description: Generates a password reset link for a user. Link is valid for 15 minutes.
  *     produces:
  *       - application/json
@@ -192,6 +197,7 @@ router.post('/forgot-password', userController.forgotPassword);
  *   post:
  *     tags:
  *       - Users
+ *     summary: Reset forgotten password
  *     description: Resets the password for a user
  *     produces:
  *       - application/json
