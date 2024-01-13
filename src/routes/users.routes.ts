@@ -133,7 +133,135 @@ router.post(
  *                   example: "Internal server error"
  */
 router.post('/signin', userController.singIn);
+/**
+ * @swagger
+ * /forgot-password:
+ *   post:
+ *     tags:
+ *       - Users
+ *     description: Generates a password reset link for a user. Link is valid for 15 minutes.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userName
+ *         description: Username of the user
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             userName:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Password reset link has been sent to provided mail address.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             message:
+ *               type: string
+ *             userId:
+ *               type: integer
+ *             token:
+ *               type: string
+ *       404:
+ *         description: User does not exist.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             message:
+ *               type: string
+ *       500:
+ *         description: Server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             error:
+ *               type: string
+ */
 router.post('/forgot-password', userController.forgotPassword);
+/**
+ * @swagger
+ * /reset-password/{id}/{token}:
+ *   post:
+ *     tags:
+ *       - Users
+ *     description: Resets the password for a user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: ID of the user
+ *         in: path
+ *         required: true
+ *         type: integer
+ *       - name: token
+ *         description: Token for password reset
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         description: New password
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             password:
+ *               type: string
+ *       - name: repPassword
+ *         description: Repeated new password
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             repPassword:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Password updated successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             message:
+ *               type: string
+ *       401:
+ *         description: Provided passwords are different or new password is the same as the old one
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             message:
+ *               type: string
+ *       404:
+ *         description: Invalid user Id
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             message:
+ *               type: string
+ *       500:
+ *         description: Server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *             error:
+ *               type: string
+ */
 router.post('/reset-password/:id/:token', userController.resetPassword);
 
 export default router;
