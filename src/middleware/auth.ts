@@ -26,7 +26,7 @@ export class ProtectMiddleware {
       return;
     }
     try {
-      const user = <jwt.JwtPayload>verify(token, config.JWT_TOKEN);
+      const user:jwt.JwtPayload = <jwt.JwtPayload>verify(token, config.JWT_TOKEN);
       req.headers['user_id'] = user.id;
       next();
     } catch (error) {

@@ -21,7 +21,7 @@ import { Equipment as IEquipment } from '../models/models.js';
  * @swagger
  * components:
  *   schemas:
- *     ProjectEquipment:
+ *     Equipment:
  *       type: object
  *       properties:
  *         id:

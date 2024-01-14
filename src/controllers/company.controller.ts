@@ -45,9 +45,8 @@ import { createCompany } from '../services/company.service.js';
 export class CompanyController {
   async createCompany(req: Request, res: Response): Promise<void> {
     const user_id = parseInt(<string>req.headers.user_id, 10);
-    let companyData: ICompany = req.body;
 
-    companyData = {
+    const companyData: ICompany = {
       name: req.body.name,
       user_id: user_id,
     };
