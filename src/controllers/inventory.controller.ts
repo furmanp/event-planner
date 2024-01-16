@@ -88,42 +88,6 @@ export class InventoryController {
     }
   }
 
-  async updateInventory(req: Request, res: Response): Promise<void> {
-    const company_id = parseInt(<string>req.headers.company_id, 10);
-    let inventoryData: IInventory[] = req.body;
-    inventoryData = inventoryData.map((item) => ({
-      ...item,
-      company_id: company_id,
-    }));
-
-    try {
-      const inventory: Prisma.BatchPayload = await updateInventory(
-        inventoryData,
-      );
-      res.status(204).json({
-        success: true,
-        data: inventory,
-        message: 'Client updated successfully',
-      });
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
-
-  async deleteInventory(req: Request, res: Response): Promise<void> {
-    const company_id = parseInt(<string>req.headers.company_id, 10);
-    try {
-      const inventory: Prisma.BatchPayload = await deleteInventory(company_id);
-      res.status(204).json({
-        success: true,
-        data: inventory,
-        message: 'Clients deleted successfully',
-      });
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
-
   async createInventory(req: Request, res: Response): Promise<void> {
     const company_id = parseInt(<string>req.headers.company_id, 10);
     let inventoryData: IInventory | IInventory[] = req.body;
@@ -157,6 +121,41 @@ export class InventoryController {
       }
     } catch (error) {
       res.status(500).json({ success: false, error: error });
+    }
+  }
+  async updateInventory(req: Request, res: Response): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
+    let inventoryData: IInventory[] = req.body;
+    inventoryData = inventoryData.map((item) => ({
+      ...item,
+      company_id: company_id,
+    }));
+
+    try {
+      const inventory: Prisma.BatchPayload = await updateInventory(
+        inventoryData,
+      );
+      res.status(204).json({
+        success: true,
+        data: inventory,
+        message: 'Client updated successfully',
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  async deleteInventory(req: Request, res: Response): Promise<void> {
+    const company_id = parseInt(<string>req.headers.company_id, 10);
+    try {
+      const inventory: Prisma.BatchPayload = await deleteInventory(company_id);
+      res.status(204).json({
+        success: true,
+        data: inventory,
+        message: 'Clients deleted successfully',
+      });
+    } catch (error) {
+      res.status(500).json(error);
     }
   }
 

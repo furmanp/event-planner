@@ -289,8 +289,110 @@ router.delete('/equipment', equipmentController.deleteEquipment);
  *                   type: string
  */
 router.get('/equipment/:id', equipmentController.getEquipmentById);
+
 router.post('/equipment/:id'); // error
+/**
+ * @swagger
+ * /api/equipment/{id}:
+ *   put:
+ *     tags:
+ *       - Equipment
+ *     summary: Update equipment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the equipment to update
+ *       - in: body
+ *         name: equipment
+ *         description: Equipment object that needs to be updated
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             item_id:
+ *               type: string
+ *             project_id:
+ *               type: string
+ *             check_in:
+ *               type: string
+ *             check_out:
+ *               type: string
+ *     responses:
+ *       204:
+ *         description: Equipment updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     item_id:
+ *                       type: string
+ *                     company_id:
+ *                       type: number
+ *                     project_id:
+ *                       type: string
+ *                     check_in:
+ *                       type: date
+ *                     check_out:
+ *                       type: date
+ *                 message:
+ *                   type: string
+ *                   example: Equipment updated successfully
+ */
 router.put('/equipment/:id', equipmentController.updateEquipmentById);
+/**
+ * @swagger
+ * /api/equipment/{id}:
+ *   delete:
+ *     tags:
+ *       - Equipment
+ *     summary: Delete equipment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the equipment to delete
+ *     responses:
+ *       204:
+ *         description: Equipment deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     item_id:
+ *                       type: string
+ *                     company_id:
+ *                       type: integer
+ *                     project_id:
+ *                       type: string
+ *                     check_in:
+ *                       type: string
+ *                     check_out:
+ *                       type: string
+ *                 message:
+ *                   type: string
+ */
 router.delete('/equipment/:id', equipmentController.deleteEquipmentById);
 
 router.get('/equipment/:date'); //getEquipmentByDate
