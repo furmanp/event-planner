@@ -43,7 +43,7 @@ import {
  *         equipment:
  *           type: array
  *           items:
- *             $ref: '#/components/schemas/ProjectEquipment'
+ *             $ref: '#/components/schemas/Equipment'
  *       required:
  *         - name
  *         - stock

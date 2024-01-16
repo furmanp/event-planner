@@ -52,7 +52,7 @@ import { Prisma } from '@prisma/client';
  *         project_equipment:
  *           type: array
  *           items:
- *             $ref: '#/components/schemas/ProjectEquipment'
+ *             $ref: '#/components/schemas/Equipment'
  *       required:
  *         - name
  *         - client_id
