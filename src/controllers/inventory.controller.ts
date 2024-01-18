@@ -23,8 +23,8 @@ import {
  *   schemas:
  *     Inventory:
  *       type: object
- *       properties:
  *       description: Collection of items that company owns.
+ *       properties:
  *         id:
  *           type: integer
  *           description: The inventory item ID.
@@ -41,10 +41,10 @@ import {
  *           type: integer
  *           description: The ID of the company owning the inventory item.
  *           example: 1
- *         equipment:
+ *         projects:
  *           type: array
  *           items:
- *             $ref: '#/components/schemas/Equipment'
+ *             $ref: '#/components/schemas/Project'
  *       required:
  *         - name
  *         - stock
