@@ -24,6 +24,7 @@ import {
  *     Inventory:
  *       type: object
  *       properties:
+ *       description: Collection of items that company owns.
  *         id:
  *           type: integer
  *           description: The inventory item ID.
@@ -49,6 +50,7 @@ import {
  *         - stock
  *         - company_id
  *       uniqueItems:
+ *         - id
  *         - name
  *         - company_id
  */

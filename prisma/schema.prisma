@@ -16,7 +16,7 @@ model users {
 
 model company {
   id      Int    @id @default(autoincrement())
-  name    String @unique
+  name    String
   user_id Int    @unique
 
   projects  projects[]

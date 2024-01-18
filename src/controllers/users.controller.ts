@@ -15,13 +15,11 @@ import { config } from '../../config.js';
  *   schemas:
  *     User:
  *       type: object
- *       required:
- *         - username
- *         - paswword
+ *       description: Application user.
  *       properties:
  *         id:
  *           type: integer
- *           description: The user ID.
+ *           description: The user ID. Assigned Automatically.
  *           example: 1
  *         username:
  *           type: string
@@ -30,7 +28,12 @@ import { config } from '../../config.js';
  *         password:
  *           type: string
  *           description: The password of the user. Must contain capital letter, number, special sign and hav emore than 8 characters.
- *           example: "password123"
+ *           example: "Password123!"
+ *       required:
+ *         - username
+ *         - password
+ *       uniqueItems:
+ *         - username
  */
 export class UsersController {
 async createUsersHandler(req: Request, res: Response): Promise<void> {

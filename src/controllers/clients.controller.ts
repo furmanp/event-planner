@@ -16,10 +16,11 @@ import {
  *   schemas:
  *     Client:
  *       type: object
+ *       description: Users clients, that projects are realized for.
  *       properties:
  *         id:
  *           type: integer
- *           description: The client ID.
+ *           description: The client ID. Assigned automatically.
  *           example: 1
  *         name:
  *           type: string
@@ -27,7 +28,7 @@ import {
  *           example: "Client Inc."
  *         company_id:
  *           type: integer
- *           description: The ID of the company associated with the client.
+ *           description: ID associated with the logged user (workspace).
  *           example: 1
  *         projects:
  *           type: array
@@ -39,6 +40,7 @@ import {
  *       uniqueItems:
  *         - name
  *         - company_id
+ *         - id
  */
 export class ClientController {
   async getClients(req: Request, res: Response): Promise<void> {

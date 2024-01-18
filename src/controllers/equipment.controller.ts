@@ -23,10 +23,11 @@ import { Equipment as IEquipment } from '../models/models.js';
  *   schemas:
  *     Equipment:
  *       type: object
+ *       description: Equivalent of booking. Equipment is unique per project, it is derived from the items' repository.
  *       properties:
  *         id:
  *           type: integer
- *           description: The project equipment ID.
+ *           description: The project equipment ID. Assigned Automatically
  *           example: 1
  *         project_id:
  *           type: integer
@@ -41,15 +42,24 @@ import { Equipment as IEquipment } from '../models/models.js';
  *           description: The ID of the company owning the equipment.
  *           example: 1
  *         check_in:
- *           type: string
- *           format: date
- *           description: The check-in date of the equipment.
+ *           type: date
+ *           description: The check-in date of the equipment (booking).
  *           example: "2024-01-10"
  *         check_out:
- *           type: string
- *           format: date
- *           description: The check-out date of the equipment.
+ *           type: date
+ *           description: The return date of the equipment (booking).
  *           example: "2024-01-15"
+ *       required:
+ *         - project_id
+ *         - item_id
+ *         - company_id
+ *         - check_in
+ *         - check_out
+ *       uniqueItems:
+ *         - id
+ *         - project_id
+ *         - item_id
+ *         - company_id
  */
 export class EquipmentController {
   async getEquipment(

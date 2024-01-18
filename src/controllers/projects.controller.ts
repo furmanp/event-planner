@@ -27,6 +27,7 @@ import { Prisma } from '@prisma/client';
  *   schemas:
  *     Project:
  *       type: object
+ *       description: Projects that company is realising.
  *       properties:
  *         id:
  *           type: integer
@@ -41,9 +42,8 @@ import { Prisma } from '@prisma/client';
  *           description: The ID of the client associated with the project.
  *           example: 1
  *         date:
- *           type: string
- *           format: date
- *           description: The date the project was created or is set to start.
+ *           type: date
+ *           description: The date the project is set to start.
  *           example: "2024-01-10"
  *         company_id:
  *           type: integer
@@ -59,6 +59,7 @@ import { Prisma } from '@prisma/client';
  *         - date
  *         - company_id
  *       uniqueItems:
+ *         - id
  *         - name
  *         - company_id
  */

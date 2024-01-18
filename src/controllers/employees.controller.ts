@@ -23,10 +23,11 @@ import { Prisma } from '@prisma/client';
  *   schemas:
  *     Employee:
  *       type: object
+ *       description: Employees that are hired in the users Company. Can be assigned to the projects.
  *       properties:
  *         id:
  *           type: integer
- *           description: The employee ID.
+ *           description: The employee ID. Assigned automatically.
  *           example: 1
  *         first_name:
  *           type: string
@@ -45,7 +46,6 @@ import { Prisma } from '@prisma/client';
  *         - last_name
  *         - company_id
  *       uniqueItems:
- *         - first_name
  *         - last_name
  *         - company_id
  */

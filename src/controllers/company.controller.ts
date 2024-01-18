@@ -8,18 +8,19 @@ import { createCompany } from '../services/company.service.js';
  *   schemas:
  *     Company:
  *       type: object
+ *       description: Users company/workspace. Used to create projects, teams, inventory. Single user may have multiple companies.
  *       properties:
  *         id:
  *           type: integer
- *           description: The company ID.
+ *           description: The company ID. Assigned automatically.
  *           example: 1
  *         name:
  *           type: string
- *           description: The unique name of the company.
+ *           description: The unique name of the company. Company serves as a users workspace.
  *           example: "Company Inc."
  *         user_id:
  *           type: integer
- *           description: The unique ID of the user associated with the company.
+ *           description: ID of logged user. Assigned Automatically.
  *           example: 1
  *         projects:
  *           type: array
@@ -41,6 +42,9 @@ import { createCompany } from '../services/company.service.js';
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Equipment'
+ *       required:
+ *         - name
+ *         - user_id
  */
 export class CompanyController {
   async createCompany(req: Request, res: Response): Promise<void> {
