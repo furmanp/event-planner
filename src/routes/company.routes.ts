@@ -9,7 +9,7 @@ const companyController: CompanyController = new CompanyController();
  *   post:
  *     tags:
  *       - Company
- *     summary: Create user's company
+ *     summary: Create user's company. Company servers as a workspace. User may have multiple companies.
  *     requestBody:
  *       required: true
  *       content:
@@ -21,6 +21,11 @@ const companyController: CompanyController = new CompanyController();
  *                 type: string
  *               user_id:
  *                 type: string
+ *           examples:
+ *             company:
+ *               summary: Example company
+ *               value:
+ *                 username: "Users Company 1"
  *     responses:
  *       201:
  *         description: Company created successfully

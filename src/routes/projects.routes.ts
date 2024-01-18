@@ -9,7 +9,7 @@ const projectController: ProjectController = new ProjectController();
  *   get:
  *     tags:
  *       - Projects
- *     summary: Get a list of projects
+ *     summary: Get a list of projects for signed user.
  *     parameters:
  *       - in: query
  *         name: page
