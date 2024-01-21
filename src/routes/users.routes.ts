@@ -157,38 +157,47 @@ router.post('/signin', userController.singIn);
  *           properties:
  *             userName:
  *               type: string
+ *               example: "user123"
  *     responses:
  *       201:
- *         description: Password reset link has been sent to provided mail address.
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             message:
- *               type: string
- *             userId:
- *               type: integer
- *             token:
- *               type: string
+ *         description: Password reset link has been generated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset link has been sent."
  *       404:
- *         description: User does not exist.
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             message:
- *               type: string
+ *         description: Provided user does not exist in the database.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "User does not exist."
  *       500:
- *         description: Server error
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             error:
- *               type: string
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error."
  */
 router.post('/forgot-password', userController.forgotPassword);
 /**
@@ -198,7 +207,7 @@ router.post('/forgot-password', userController.forgotPassword);
  *     tags:
  *       - Users
  *     summary: Reset forgotten password
- *     description: Resets the password for a user
+ *     description: Resets the password for a user. ID and token are provided in the reset link.
  *     produces:
  *       - application/json
  *     parameters:
@@ -221,6 +230,7 @@ router.post('/forgot-password', userController.forgotPassword);
  *           properties:
  *             password:
  *               type: string
+ *               example: "NewPassword123!"
  *       - name: repPassword
  *         description: Repeated new password
  *         in: body
@@ -230,43 +240,60 @@ router.post('/forgot-password', userController.forgotPassword);
  *           properties:
  *             repPassword:
  *               type: string
+ *               example: "NewPassword123!"
  *     responses:
  *       201:
- *         description: Password updated successfully
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             message:
- *               type: string
+ *         description: Password updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Password updated successfully."
  *       401:
- *         description: Provided passwords are different or new password is the same as the old one
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             message:
- *               type: string
+ *         description: Provided passwords are not the same.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Provided passwords are different."
  *       404:
- *         description: Invalid user Id
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             message:
- *               type: string
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid user ID."
  *       500:
- *         description: Server error
- *         schema:
- *           type: object
- *           properties:
- *             success:
- *               type: boolean
- *             error:
- *               type: string
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error."
  */
 router.post('/reset-password/:id/:token', userController.resetPassword);
 
