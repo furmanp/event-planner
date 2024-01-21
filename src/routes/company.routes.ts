@@ -9,7 +9,7 @@ const companyController: CompanyController = new CompanyController();
  *   post:
  *     tags:
  *       - Company
- *     summary: Create user's company. Company servers as a workspace. User may have multiple companies.
+ *     summary: Create user's company. Company servers as a workspace. User may have one company.
  *     requestBody:
  *       required: true
  *       content:
@@ -21,10 +21,7 @@ const companyController: CompanyController = new CompanyController();
  *                 type: string
  *               user_id:
  *                 type: string
- *           examples:
- *             company:
- *               summary: Example company
- *               value:
+ *           example:
  *                 username: "Users Company 1"
  *     responses:
  *       201:
@@ -38,7 +35,17 @@ const companyController: CompanyController = new CompanyController();
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   $ref: '#/components/schemas/Company'
+ *                   type: object
+ *                   properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         name:
+ *                           type: string
+ *                           example: "Users Company 1"
+ *                         user_id:
+ *                           type: integer
+ *                           example: 1
  *                 message:
  *                   type: string
  *                   example: 'Company created.'
@@ -54,6 +61,7 @@ const companyController: CompanyController = new CompanyController();
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: "Internal server error"
  */
 router.post('/companies', companyController.createCompany);
 

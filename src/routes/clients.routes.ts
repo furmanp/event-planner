@@ -16,35 +16,17 @@ const clientController: ClientController = new ClientController();
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Client'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Client'
  *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get('/clients', clientController.getClients);
-/**
- * @swagger
- * /api/clients:
- *   post:
- *     tags:
- *       - Clients
- *     summary: Create one or more clients for a given company
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             oneOf:
- *               - $ref: '#/components/schemas/Client'
- *               - type: array
- *                 items:
- *                   $ref: '#/components/schemas/Client'
- *     responses:
- *       201:
- *         description: Client(s) created successfully
+ *         description: Bearer token wrong/not provided
  *         content:
  *           application/json:
  *             schema:
@@ -52,14 +34,10 @@ router.get('/clients', clientController.getClients);
  *               properties:
  *                 success:
  *                   type: boolean
- *                   example: true
- *                 data:
- *                   oneOf:
- *                     - $ref: '#/components/schemas/Client'
- *                     - number of clients created
+ *                   example: false
  *                 message:
  *                   type: string
- *                   example: 'Client created.'
+ *                   example: "Unauthorized"
  *       500:
  *         description: Internal server error
  *         content:
@@ -72,6 +50,69 @@ router.get('/clients', clientController.getClients);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: "Internal server error"
+ */
+router.get('/clients', clientController.getClients);
+/**
+ * @swagger
+ * /api/clients:
+ *   post:
+ *     tags:
+ *       - Clients
+ *     description: Create one or more clients within a single request. If one client is created, its data will be provided upon success. If multiple, total count will be returned instead.
+ *     summary: Create one or more clients for a given company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             oneOf:
+ *               - $ref: '#/components/schemas/Client'
+ *               - type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Client'
+ *           examples:
+ *             single client:
+ *               summary: Create single client
+ *               value:
+ *                 name: "Client 1"
+ *                 user_id: "123"
+ *             multiple clients:
+ *               summary: Create multiple clients
+ *               value:
+ *                 - name: "Client 1"
+ *                   user_id: "123"
+ *                 - name: "Client 2"
+ *                   user_id: "456"
+ *     responses:
+ *       200:
+ *         description: Clients created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                     $ref: '#/components/schemas/Client'
+ *                 message:
+ *                   type: string
+ *                   example: 'Clients created successfully'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: 'Internal server error'
  */
 router.post('/clients', clientController.createClients);
 // router.put('/clients', clientController.updateClients);
@@ -81,7 +122,8 @@ router.post('/clients', clientController.createClients);
  *   delete:
  *     tags:
  *       - Clients
- *     summary: Delete clients for a given company
+ *     description: All clients for a signed user are deleted.
+ *     summary: Delete all clients for a given company
  *     responses:
  *       204:
  *         description: Clients deleted successfully
@@ -186,7 +228,7 @@ router.get('/clients/:id', clientController.getClientById);
  *           type: number
  *         required: true
  *         description: ID of the client to be updated
- *       - in: body
+ *       - in: requestBody
  *         name: clientData
  *         schema:
  *           $ref: '#/components/schemas/Client'
@@ -219,6 +261,7 @@ router.get('/clients/:id', clientController.getClientById);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.put('/clients/:id', clientController.updateClientById);
 /**
@@ -263,6 +306,7 @@ router.put('/clients/:id', clientController.updateClientById);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.delete('/clients/:id', clientController.deleteClientById);
 
