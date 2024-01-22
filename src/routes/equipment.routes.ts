@@ -99,10 +99,10 @@ const equipmentController = new EquipmentController();
 router.get('/equipment', equipmentController.getEquipment);
 /**
  * @swagger
- * /api/employees:
+ * /api/equipment:
  *   post:
  *     tags:
- *       - Employees
+ *       - Equipment
  *     summary: Create a new employee or multiple employees
  *     parameters:
  *       - in: body
@@ -227,10 +227,10 @@ router.post('/equipment', equipmentController.createEquipment);
 router.delete('/equipment', equipmentController.deleteEquipment);
 /**
  * @swagger
- * /api/employees/{id}:
+ * /api/equipment/{id}:
  *   get:
  *     tags:
- *       - Employees
+ *       - Equipment
  *     summary: Get an employee by ID
  *     parameters:
  *       - in: path

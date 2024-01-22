@@ -10,6 +10,7 @@ const employeeController: EmployeeController = new EmployeeController();
  *   get:
  *     tags:
  *       - Employees
+ *     description: listing all the employees for a signed user. The request is using pagination.
  *     summary: Get a list of employees for a given company
  *     parameters:
  *       - in: query
@@ -78,6 +79,7 @@ const employeeController: EmployeeController = new EmployeeController();
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.get('/employees', employeeController.getEmployees);
 /**
@@ -86,28 +88,34 @@ router.get('/employees', employeeController.getEmployees);
  *   post:
  *     tags:
  *       - Employees
+ *     description: Create one or more employees within a single request. If one employee is created, its data will be provided upon success. If multiple, total count will be returned instead.
  *     summary: Create one or more employees for a given company
- *     parameters:
- *       - in: body
- *         name: employeeData
- *         schema:
- *           type: object
- *           properties:
- *             first_name:
- *               type: string
- *               example: "John"
- *             last_name:
- *               type: string
- *               example: "Doe"
- *             company_id:
- *               type: number
- *               example: 1
- *           required:
- *             - first_name
- *             - last_name
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             oneOf:
+ *               - $ref: '#/components/schemas/Employee'
+ *               - type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Employee'
+ *           examples:
+ *             single employee:
+ *               summary: Create single employee
+ *               value:
+ *                 first_name: "John"
+ *                 last_name: "Doe"
+ *             multiple employees:
+ *               summary: Create multiple employees
+ *               value:
+ *                 - first_name: "Uncle"
+ *                   last_name: "Sam"
+ *                 - first_name: "Aunt"
+ *                   last_name: "Lily"
  *     responses:
- *       201:
- *         description: Employee(s) created successfully
+ *       200:
+ *         description: Employee created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -117,13 +125,10 @@ router.get('/employees', employeeController.getEmployees);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   oneOf:
- *                     - $ref: '#/components/schemas/Employee'
- *                     - $ref: number
- *                   example: { id: 1, first_name: 'John', last_name: 'Doe' }
+ *                     $ref: '#/components/schemas/Employee'
  *                 message:
  *                   type: string
- *                   example: 'Employee created.'
+ *                   example: 'Employee created successfully'
  *       500:
  *         description: Internal server error
  *         content:
@@ -136,6 +141,7 @@ router.get('/employees', employeeController.getEmployees);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.post('/employees', employeeController.createEmployees);
 // router.put('/employees', employeeController.updateEmployees);
@@ -145,6 +151,7 @@ router.post('/employees', employeeController.createEmployees);
  *   delete:
  *     tags:
  *       - Employees
+ *     description: Deletes all the employees for singed user. Successful response returns number of records that got deleted.
  *     summary: Delete all employees for a given company
  *     parameters:
  *     responses:
@@ -179,6 +186,7 @@ router.post('/employees', employeeController.createEmployees);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.delete('/employees', employeeController.deleteAllEmployees);
 /**
@@ -236,6 +244,7 @@ router.delete('/employees', employeeController.deleteAllEmployees);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.get('/employees/:id', employeeController.getEmployeeById);
 router.post('/employees/:id'); // error
@@ -254,7 +263,7 @@ router.post('/employees/:id'); // error
  *         required: true
  *         description: ID of the employee to update
  *       - in: body
- *         name: employee
+ *         name: employeeData
  *         description: Employee object that needs to be updated
  *         required: true
  *         schema:
@@ -287,6 +296,7 @@ router.post('/employees/:id'); // error
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error.
  */
 router.put('/employees/:id', employeeController.updateEmployeeById);
 /**
