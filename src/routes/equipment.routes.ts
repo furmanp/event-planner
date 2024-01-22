@@ -9,6 +9,7 @@ const equipmentController = new EquipmentController();
  *   get:
  *     tags:
  *       - Equipment
+ *     description: listing all the equipment (reservations) for a signed user. List of equipment is returned with the number of total available items. The request is using pagination.
  *     summary: Get equipment for a given company
  *     parameters:
  *       - in: query
@@ -103,24 +104,39 @@ router.get('/equipment', equipmentController.getEquipment);
  *   post:
  *     tags:
  *       - Equipment
- *     summary: Create a new employee or multiple employees
- *     parameters:
- *       - in: body
- *         name: employeeData
- *         schema:
- *           type: object
- *           properties:
- *             first_name:
- *               type: string
- *             last_name:
- *               type: string
- *             company_id:
- *               type: number
- *         required: true
- *         description: Employee data to be created
+ *     summary: Create one or more equipment reservations in a single request.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             oneOf:
+ *               - $ref: '#/components/schemas/Equipment'
+ *               - type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Equipment'
+ *           examples:
+ *             single reservation:
+ *               summary: Create single reservation
+ *               value:
+ *                 project_id: 1
+ *                 item_id: 1
+ *                 check_in: "2024-01-01"
+ *                 check_out: "2024-01-10"
+ *             multiple reservations:
+ *               summary: Create multiple reservations
+ *               value:
+ *                 -  project_id: 1
+ *                    item_id: 1
+ *                    check_in: "2024-01-01"
+ *                    check_out: "2024-01-10"
+ *                 -  project_id: 1
+ *                    item_id: 2
+ *                    check_in: "2024-01-01"
+ *                    check_out: "2024-01-10"
  *     responses:
  *       201:
- *         description: Employee(s) created successfully
+ *         description: Reservation(s) created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -130,37 +146,10 @@ router.get('/equipment', equipmentController.getEquipment);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   type: object
- *                   properties:
- *                     count:
- *                       type: number
- *                     id:
- *                       type: number
- *                     first_name:
- *                       type: string
- *                     last_name:
- *                       type: string
- *                     company_id:
- *                       type: number
- *                   example:
- *                     count: 2
- *                     data: [
- *                       {
- *                         "id": 1,
- *                         "first_name": "John",
- *                         "last_name": "Doe",
- *                         "company_id": 1
- *                       },
- *                       {
- *                         "id": 2,
- *                         "first_name": "Jane",
- *                         "last_name": "Doe",
- *                         "company_id": 1
- *                       }
- *                     ]
+ *                   $ref: '#/components/schemas/Equipment'
  *                 message:
  *                   type: string
- *                   example: "2 employees created."
+ *                   example: "reservation created."
  *       500:
  *         description: Internal server error
  *         content:
@@ -185,15 +174,14 @@ router.post('/equipment', equipmentController.createEquipment);
 
 /**
  * @swagger
- * /api/employees:
+ * /api/equipment:
  *   delete:
  *     tags:
- *       - Employees
- *     summary: Delete all employees for a given company
- *     parameters:
+ *       - Equipment
+ *     summary: Delete all equipments for a given company
  *     responses:
  *       204:
- *         description: Employees deleted successfully
+ *         description: Equipment deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -210,7 +198,7 @@ router.post('/equipment', equipmentController.createEquipment);
  *                   example: { count: 10 }
  *                 message:
  *                   type: string
- *                   example: 'Employees deleted successfully'
+ *                   example: 'Equipment deleted successfully'
  *       500:
  *         description: Internal server error
  *         content:
@@ -231,17 +219,17 @@ router.delete('/equipment', equipmentController.deleteEquipment);
  *   get:
  *     tags:
  *       - Equipment
- *     summary: Get an employee by ID
+ *     summary: Get equipment by ID for a given company
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: number
  *         required: true
- *         description: ID of the employee to retrieve
+ *         description: ID of the equipment to be retrieved
  *     responses:
  *       200:
- *         description: Employee retrieved successfully
+ *         description: Equipment retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -251,19 +239,12 @@ router.delete('/equipment', equipmentController.deleteEquipment);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                     first_name:
- *                       type: string
- *                     last_name:
- *                       type: string
- *                     company_id:
- *                       type: number
- *                   example: { id: 1, first_name: 'John', last_name: 'Doe', company_id: 1 }
+ *                   $ref: '#/components/schemas/Equipment'
+ *                 message:
+ *                   type: string
+ *                   example: 'Equipment retrieved successfully'
  *       404:
- *         description: Employee not found
+ *         description: Equipment not found
  *         content:
  *           application/json:
  *             schema:
@@ -274,7 +255,7 @@ router.delete('/equipment', equipmentController.deleteEquipment);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: 'Not found'
+ *                   example: 'Equipment not found'
  *       500:
  *         description: Internal server error
  *         content:
@@ -287,6 +268,7 @@ router.delete('/equipment', equipmentController.deleteEquipment);
  *                   example: false
  *                 error:
  *                   type: string
+ *                   example: Internal server error
  */
 router.get('/equipment/:id', equipmentController.getEquipmentById);
 
@@ -305,21 +287,12 @@ router.post('/equipment/:id'); // error
  *           type: integer
  *         required: true
  *         description: ID of the equipment to update
- *       - in: body
+ *       - in: requestBody
  *         name: equipment
  *         description: Equipment object that needs to be updated
  *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             item_id:
- *               type: string
- *             project_id:
- *               type: string
- *             check_in:
- *               type: string
- *             check_out:
- *               type: string
+ *           $ref: '#/components/schemas/Equipment'
  *     responses:
  *       204:
  *         description: Equipment updated successfully
@@ -336,16 +309,19 @@ router.post('/equipment/:id'); // error
  *                   properties:
  *                     id:
  *                       type: number
+ *                       example: 1
  *                     item_id:
- *                       type: string
- *                     company_id:
  *                       type: number
+ *                       example: 1
  *                     project_id:
- *                       type: string
+ *                       type: number
+ *                       example: 1
  *                     check_in:
  *                       type: date
+ *                       example: "2024-01-01"
  *                     check_out:
  *                       type: date
+ *                       example: "2024-01-10"
  *                 message:
  *                   type: string
  *                   example: Equipment updated successfully
@@ -379,19 +355,23 @@ router.put('/equipment/:id', equipmentController.updateEquipmentById);
  *                   type: object
  *                   properties:
  *                     id:
- *                       type: integer
+ *                       type: number
+ *                       example: 1
  *                     item_id:
- *                       type: string
- *                     company_id:
- *                       type: integer
+ *                       type: number
+ *                       example: 1
  *                     project_id:
- *                       type: string
+ *                       type: number
+ *                       example: 1
  *                     check_in:
- *                       type: string
+ *                       type: date
+ *                       example: "2024-01-01"
  *                     check_out:
- *                       type: string
+ *                       type: date
+ *                       example: "2024-01-10"
  *                 message:
  *                   type: string
+ *                   example: Internal server error
  */
 router.delete('/equipment/:id', equipmentController.deleteEquipmentById);
 
