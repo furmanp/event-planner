@@ -1,5 +1,5 @@
-import { InventoryController } from '../controllers/inventory.controller.js';
 import express, { Router } from 'express';
+import { InventoryController } from '../controllers/inventory.controller.js';
 
 const router: Router = express.Router();
 const inventoryController: InventoryController = new InventoryController();
@@ -9,6 +9,7 @@ const inventoryController: InventoryController = new InventoryController();
  *   get:
  *     tags:
  *       - Inventory
+ *     description: Inventory is a set of items that company owns. Items are being borrowed/rented for a project as a project equipment.
  *     summary: Get inventory data
  *     parameters:
  *       - in: query
@@ -38,26 +39,26 @@ const inventoryController: InventoryController = new InventoryController();
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                       item_id:
- *                         type: string
- *                       company_id:
- *                         type: integer
- *                       project_id:
- *                         type: string
- *                       check_in:
- *                         type: string
- *                       check_out:
- *                         type: string
+ *                    $ref: '#/components/schemas/Inventory'
  *                 totalItems:
  *                   type: integer
- *                   description: Total number of items in the inventory
+ *                   example: 1
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
  */
 router.get('/inventory', inventoryController.getInventory);
 /**
@@ -66,18 +67,31 @@ router.get('/inventory', inventoryController.getInventory);
  *   post:
  *     tags:
  *       - Inventory
+ *     description: Create one or more Inventory items. Items are bound do the users workspace.
  *     summary: Create inventory data
- *     parameters:
- *       - in: body
- *         name: inventoryData
- *         schema:
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *          schema:
  *           oneOf:
  *             - $ref: '#/components/schemas/Inventory'
  *             - type: array
  *               items:
  *                 $ref: '#/components/schemas/Inventory'
- *         required: true
- *         description: Inventory data to be created
+ *           examples:
+ *             single item:
+ *               summary: Create single item
+ *               value:
+ *                 name: "item 1"
+ *                 stock: 100
+ *             multiple items:
+ *               summary: Create multiple items
+ *               value:
+ *                 - name: "item 1"
+ *                   stock: 100
+ *                 - name: "item 2"
+ *                   stock: "456"
  *     responses:
  *       201:
  *         description: Inventory created successfully
@@ -133,7 +147,8 @@ router.post('/inventory', inventoryController.createInventory);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   $ref: integer
+ *                   type: number
+ *                   example: 5
  *                 message:
  *                   type: string
  *                   example: 'Inventory deleted successfully'
@@ -186,6 +201,19 @@ router.delete('/inventory', inventoryController.deleteInventory);
  *                 message:
  *                   type: string
  *                   example: 'Inventory retrieved successfully'
+ *       404:
+ *         description: Inventory not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Inventory not found'
  *       500:
  *         description: Internal server error
  *         content:
@@ -209,22 +237,22 @@ router.post('/inventory/:id'); // error
  *   put:
  *     tags:
  *       - Inventory
- *     summary: Update inventory data by ID
+ *     summary: Update an item by ID for a given company
+ *     parameters:
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: number
  *         required: true
- *         description: ID of the inventory to update
- *       - in: body
- *         name: inventoryData
+ *         description: ID of the item to be updated
+ *       - in: requestBody
+ *         name: itemData
  *         schema:
  *           $ref: '#/components/schemas/Inventory'
- *         required: true
- *         description: Inventory object containing updated data
+ *         description: Client data to be updated
  *     responses:
  *       204:
- *         description: Inventory updated successfully
+ *         description: Item updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -238,6 +266,19 @@ router.post('/inventory/:id'); // error
  *                 message:
  *                   type: string
  *                   example: 'Inventory updated successfully'
+ *       404:
+ *         description: Inventory not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Inventory not found'
  *       500:
  *         description: Internal server error
  *         content:
@@ -250,7 +291,7 @@ router.post('/inventory/:id'); // error
  *                   example: false
  *                 error:
  *                   type: string
- *                   example: 'Internal server error'
+ *                   example: Internal server error.
  */
 router.put('/inventory/:id', inventoryController.updatesInventoryById);
 /**
@@ -283,6 +324,19 @@ router.put('/inventory/:id', inventoryController.updatesInventoryById);
  *                 message:
  *                   type: string
  *                   example: 'Item deleted successfully'
+ *       404:
+ *         description: Inventory not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Inventory not found'
  *       500:
  *         description: Internal server error
  *         content:

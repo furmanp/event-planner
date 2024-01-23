@@ -249,6 +249,19 @@ router.get('/clients/:id', clientController.getClientById);
  *                 message:
  *                   type: string
  *                   example: 'Client updated successfully'
+ *       404:
+ *         description: Client not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Client not found'
  *       500:
  *         description: Internal server error
  *         content:
@@ -294,6 +307,19 @@ router.put('/clients/:id', clientController.updateClientById);
  *                 message:
  *                   type: string
  *                   example: 'Client deleted successfully'
+ *       404:
+ *         description: Client not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Client not found'
  *       500:
  *         description: Internal server error
  *         content:
