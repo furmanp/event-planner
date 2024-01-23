@@ -42,7 +42,7 @@ const projectController: ProjectController = new ProjectController();
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/ProjectList'
+ *                     $ref: '#/components/schemas/Project'
  *                 message:
  *                   type: string
  *                   example: 'Projects retrieved successfully'
@@ -80,6 +80,7 @@ router.get('/projects', projectController.getProjects);
  *   post:
  *     tags:
  *       - Projects
+ *     description: Create one or more projects within a single request. If one project is created, its data will be provided upon success. If multiple, total count will be returned instead.
  *     summary: Create a new project or multiple projects
  *     requestBody:
  *       required: true
@@ -91,6 +92,22 @@ router.get('/projects', projectController.getProjects);
  *               - type: array
  *                 items:
  *                   $ref: '#/components/schemas/Project'
+ *           examples:
+ *             single project:
+ *               summary: Create single project
+ *               value:
+ *                 name: "Project 1"
+ *                 client_id: "123"
+ *                 date: "2024-01-10"
+ *             multiple projects:
+ *               summary: Create multiple projects
+ *               value:
+ *                 - name: "Project 1"
+ *                   client_id: "123"
+ *                   date: "2024-01-10"
+ *                 - name: "Project 2"
+ *                   client_id: "3"
+ *                   date: "2024-05-15"
  *     responses:
  *       201:
  *         description: Project(s) created successfully
@@ -133,13 +150,6 @@ router.post('/projects', projectController.createProjects);
  *     tags:
  *       - Projects
  *     summary: Delete all projects for a company
- *     parameters:
- *       - in: header
- *         name: company_id
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the company for which the projects will be deleted
  *     responses:
  *       204:
  *         description: Projects deleted successfully
@@ -152,7 +162,8 @@ router.post('/projects', projectController.createProjects);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   $ref: integer
+ *                   type: number
+ *                   example: 5
  *                 message:
  *                   type: string
  *                   example: 'Projects deleted successfully'
@@ -180,12 +191,6 @@ router.delete('/projects', projectController.deleteProjects);
  *       - Projects
  *     summary: Get a project by ID
  *     parameters:
- *       - in: header
- *         name: company_id
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the company for which the project will be retrieved
  *       - in: path
  *         name: id
  *         schema:
@@ -220,7 +225,7 @@ router.delete('/projects', projectController.deleteProjects);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: 'Not found'
+ *                   example: 'Project not found'
  *       500:
  *         description: Internal server error
  *         content:
@@ -244,24 +249,60 @@ router.post('/project/:id'); // error
  *     tags:
  *       - Projects
  *     description: Updates a project by ID
- *     produces:
- *       - application/json
  *     parameters:
- *       - name: id
+ *       - in: path
+ *         name: id
  *         description: The ID of the project to update
- *         in: path
- *         required: true
  *         schema:
  *           type: integer
- *       - name: projectData
- *         description: The project data to update
- *         in: body
+ *         required: true
+ *       - in: requestBody
+ *         name: projectData
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Project'
+ *           $ref: '#/components/schemas/Project'
  *     responses:
  *       204:
  *         description: Project updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Project'
+ *                 message:
+ *                   type: string
+ *                   example: 'Project updated successfully'
+ *       404:
+ *         description: Project not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Project not found'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error.
  */
 router.put('/project/:id', projectController.updateProjectById);
 /**
@@ -278,12 +319,6 @@ router.put('/project/:id', projectController.updateProjectById);
  *           type: integer
  *         required: true
  *         description: The ID of the project to delete
- *       - in: header
- *         name: company_id
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the company for which the project will be deleted
  *     responses:
  *       204:
  *         description: Project deleted successfully
@@ -300,6 +335,19 @@ router.put('/project/:id', projectController.updateProjectById);
  *                 message:
  *                   type: string
  *                   example: 'Item deleted successfully'
+ *       404:
+ *         description: Project not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: 'Project not found'
  *       500:
  *         description: Internal server error
  *         content:
