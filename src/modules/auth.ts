@@ -3,9 +3,9 @@ import { compare, hash } from 'bcrypt';
 import { User } from '../models/models.js';
 import { config } from '../../config.js';
 
-export const createJWT = (user: User): string => {
+export const createJWT = (user: User, expiresIn: string | number): string => {
   const { sign } = jwt;
-  return sign({ id: user.id, username: user.username }, config.JWT_TOKEN);
+  return sign({ id: user.id, username: user.username }, config.JWT_TOKEN, {  expiresIn });
 };
 
 export function comparePasswords(

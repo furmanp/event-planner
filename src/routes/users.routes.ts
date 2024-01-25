@@ -59,7 +59,7 @@ const userController: UsersController = new UsersController();
 router.post(
   '/user',
   ProtectMiddleware.verifyPasswordSafety,
-  userController.createUsersHandler,
+  userController.createUser,
 );
 /**
  * @swagger
@@ -296,5 +296,6 @@ router.post('/forgot-password', userController.forgotPassword);
  *                   example: "Internal server error."
  */
 router.post('/reset-password/:id/:token', userController.resetPassword);
+router.post('/logout', userController.logOut);
 
 export default router;

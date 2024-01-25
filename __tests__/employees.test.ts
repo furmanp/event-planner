@@ -24,7 +24,7 @@ describe('GET employees route', ():void => {
 
   describe('given the user is logged but query params are missing', () :void => {
     test('should return 400', async () : Promise<void> => {
-      const jwt: string = createJWT(userPayload)
+      const jwt: string = createJWT(userPayload, '5m')
       const res: request.Response = await supertest(app).get('/api/data/employees')
         .set("Authorization", `Bearer ${jwt}`)
       expect(res.statusCode).toBe(400)
@@ -34,7 +34,7 @@ describe('GET employees route', ():void => {
 
   describe('given the user is logged in and query params are corect', () :void => {
     test('should return 200', async () : Promise<void> => {
-     const jwt: string = createJWT(userPayload)
+     const jwt: string = createJWT(userPayload, '5m')
       const res: request.Response = await supertest(app).get('/api/data/employees?page=1&pageSize=20')
         .set("Authorization", `Bearer ${jwt}`)
       expect(res.statusCode).toBe(200)

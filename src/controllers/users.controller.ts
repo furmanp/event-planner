@@ -36,14 +36,15 @@ import { config } from '../../config.js';
  *         - username
  */
 export class UsersController {
-async createUsersHandler(req: Request, res: Response): Promise<void> {
+  async createUser(req: Request, res: Response): Promise<void> {
     const userData: User = req.body;
     let token: string = '';
     try {
       const user: User = await createUser(userData);
       if (user) {
-        token = createJWT(user);
+        token = createJWT(user, '5m');
       }
+
       res
         .status(201)
         .json({ success: true, token: token, message: 'User created.' });
@@ -68,8 +69,17 @@ async createUsersHandler(req: Request, res: Response): Promise<void> {
         res.status(401).json({ success: false, message: 'Wrong password' });
         return;
       } else {
-        const token: string = createJWT(user);
-        res.status(200).json({ success: true, token: token });
+        const token: string = createJWT(user, '60s');
+        const refreshToken: string = createJWT(user, '1y');
+        res
+          .status(200)
+          .cookie('accessToken', token, {
+            maxAge: 900000,
+          })
+          .cookie('refreshToken', refreshToken, {
+            maxAge: 3.154e10,
+          })
+          .json({ success: true, token: token });
       }
     } catch (error) {
       res.status(500).json({ success: false, error: error });
@@ -157,5 +167,15 @@ async createUsersHandler(req: Request, res: Response): Promise<void> {
     } catch (error) {
       res.status(500).json({ success: false, error: error });
     }
+  }
+  async logOut(_req: Request, res: Response): Promise<void> {
+    res.cookie('accessToken', '', {
+      maxAge: 0,
+    });
+
+    res.cookie('refreshToken', '', {
+      maxAge: 0,
+      httpOnly: true,
+    });
   }
 }
