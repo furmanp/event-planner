@@ -4,6 +4,8 @@ Demo project showcasing the integration of Express.js and TypeScript for event p
 This project serves as a hands-on learning experience, emphasizing backend development with potential expansion into a
 full-stack application in the future.
 
+---
+
 ## Current state of data:
 ![Schema](/assets/prisma-editor.png)
 
